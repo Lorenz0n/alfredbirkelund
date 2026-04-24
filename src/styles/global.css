@@ -522,22 +522,73 @@ a[href^="https://"]:hover {
 /* ---------- Responsive ---------- */
 @media (max-width: 640px) {
   :root {
-    --size-body: 18px;
-    --size-lead: 20px;
-    --size-section: 24px;
-    --size-title: 30px;
+    --size-body: 17px;
+    --size-lead: 19px;
+    --size-meta: 12px;
+    --size-nav: 14px;
+    --size-section: 22px;
+    --size-title: 28px;
     --pad-x: 1.25rem;
+    --line: 1.55;
   }
 
-  .site-header { padding: 1.25rem 0 1rem; }
+  hr { margin: 1.75rem 0; }
 
+  /* Header — give wordmark + nav room */
+  .site-header { padding: 1rem 0 0.75rem; }
+  .site-header__inner { gap: 0.75rem; }
+  .wordmark { font-size: 18px; }
+  .site-nav { gap: 1rem; }
+
+  /* Intros + section heads — less vertical air */
+  .intro { padding: 0.75rem 0 1rem; }
+  .section { padding: 1.25rem 0; }
   .section__head {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.25rem;
+    gap: 0.15rem;
+    margin-bottom: 0.75rem;
   }
+  .essays { gap: 1rem; }
 
-  .archive-row {
-    gap: 1rem;
+  /* Archive */
+  .archive-head { padding: 1rem 0 0.25rem; }
+  .archive-year { margin-top: 1.5rem; }
+  .archive-row { line-height: 1.45; font-size: var(--size-body); }
+  .archive-row__date { margin-right: 0.55em; }
+
+  /* Essay page */
+  .essay__header { padding: 1rem 0 1.25rem; margin-bottom: 1.5rem; }
+  .essay__footer { margin-top: 2.5rem; }
+  .essay__body h2 { font-size: 22px; margin: 1.6em 0 0.5em; }
+  .essay__body h3 { font-size: 19px; margin: 1.4em 0 0.4em; }
+
+  /* About */
+  .about { padding: 1.25rem 0 0.5rem; }
+
+  /* CV */
+  .cv__header { padding: 1rem 0 1.25rem; margin-bottom: 1.25rem; }
+  .cv__section { margin-top: 1.75rem; }
+  .cv__contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 0.85rem;
   }
+  .cv__contact .cv__sep { display: none; }
+
+  /* Footer — stack cleanly, drop inline separators on narrow screens */
+  .site-footer { margin-top: 3.5rem; padding: 1.5rem 0 2rem; }
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .site-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 0.9rem;
+    row-gap: 0.25rem;
+  }
+  .site-footer__sep { display: none; }
 }
