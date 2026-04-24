@@ -43,8 +43,8 @@ export const profile: Profile = {
   // To remove a connection, delete the object. To add one (Twitter, Bluesky,
   // Scholar, ORCID, …), append another `{ label, url }` entry.
   connections: [
-    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/alfredbirkelund' },
-    { label: 'GitHub', url: 'https://github.com/alfredbirkelund' },
+    { label: 'LinkedIn', url: 'https://www.linkedin.com/in/alfredlb/' },
+    { label: 'GitHub', url: 'https://github.com/Lorenz0n' },
   ],
 };
 
