@@ -170,7 +170,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 /* ---------- Home intro ---------- */
 .intro {
-  padding: 1.5rem 0 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
 }
 .intro p {
   margin: 0 0 1.1em;
@@ -182,7 +183,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 /* ---------- Sections ---------- */
 .section {
-  padding: 2rem 0;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 .section__head {
   display: flex;
@@ -236,8 +238,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 /* ---------- About section ---------- */
 .about {
-  padding: 2rem 0 1rem;
-  max-width: var(--width-reading);
+  padding-top: 2rem;
+  padding-bottom: 1rem;
 }
 .about h2 {
   font-size: var(--size-section);
@@ -246,7 +248,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 /* ---------- Archive page ---------- */
 .archive-head {
-  padding: 1.5rem 0 0.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 0.5rem;
 }
 .archive-head h1 {
   font-size: var(--size-title);
@@ -300,7 +303,8 @@ img, svg { max-width: 100%; height: auto; display: block; }
 
 /* ---------- Essay layout ---------- */
 .essay {
-  padding: 1rem 0 2rem;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
 }
 .essay__header {
   padding: 1.5rem 0 2rem;
@@ -376,7 +380,10 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .essay__footer a { border-bottom: none; }
 
 /* ---------- CV page ---------- */
-.cv { padding: 1rem 0 2rem; }
+.cv {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
 
 .cv__header {
   padding: 1.5rem 0 2rem;
@@ -541,8 +548,8 @@ a[href^="https://"]:hover {
   .site-nav { gap: 1rem; }
 
   /* Intros + section heads — less vertical air */
-  .intro { padding: 0.75rem 0 1rem; }
-  .section { padding: 1.25rem 0; }
+  .intro { padding-top: 0.75rem; padding-bottom: 1rem; }
+  .section { padding-top: 1.25rem; padding-bottom: 1.25rem; }
   .section__head {
     flex-direction: column;
     align-items: flex-start;
@@ -552,7 +559,7 @@ a[href^="https://"]:hover {
   .essays { gap: 1rem; }
 
   /* Archive */
-  .archive-head { padding: 1rem 0 0.25rem; }
+  .archive-head { padding-top: 1rem; padding-bottom: 0.25rem; }
   .archive-year { margin-top: 1.5rem; }
   .archive-row { line-height: 1.45; font-size: var(--size-body); }
   .archive-row__date { margin-right: 0.55em; }
@@ -564,7 +571,7 @@ a[href^="https://"]:hover {
   .essay__body h3 { font-size: 19px; margin: 1.4em 0 0.4em; }
 
   /* About */
-  .about { padding: 1.25rem 0 0.5rem; }
+  .about { padding-top: 1.25rem; padding-bottom: 0.5rem; }
 
   /* CV */
   .cv__header { padding: 1rem 0 1.25rem; margin-bottom: 1.25rem; }
