@@ -1,58 +1,37 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Canopy from '../components/Canopy.astro';
 ---
 <BaseLayout
   title="Colophon — Alfred Birkelund"
-  description="How this site is built, what it stores, and what it doesn't."
+  description="Privacy, corrections, and contact."
 >
+  <Canopy />
   <article class="essay reading">
     <header class="essay__header">
       <h1 class="essay__title">Colophon</h1>
-      <p class="essay__subtitle">
-        How this site is built, what it stores, and what it doesn't.
-      </p>
     </header>
 
     <div class="essay__body">
-      <h2>The site</h2>
-      <p>
-        This is a static site — plain HTML, CSS, and a few lines of inline
-        JavaScript (the "Download as PDF" button on the CV). It's built with
-        <a href="https://astro.build">Astro</a> and MDX, versioned in git, and
-        hosted on <a href="https://vercel.com">Vercel</a>. Every push rebuilds
-        and redeploys the whole thing. No database, no server-side rendering,
-        no runtime logic.
-      </p>
-
       <h2>Privacy</h2>
       <p>
-        No cookies. No analytics. No tracking pixels. No embedded widgets. No
-        forms that submit anywhere. Visiting a page means your browser asks
-        Vercel's edge network for some HTML, CSS, and fonts — and that's the
-        whole exchange.
+        No cookies, no analytics, no tracking pixels, no embedded widgets, no
+        forms. Fonts are self-hosted, so rendering a page doesn't send any
+        request to Google or a third-party CDN. Visiting this site means your
+        browser asks GitHub's servers for HTML, CSS, and fonts — and that's
+        the whole exchange.
       </p>
       <p>
-        Vercel, like any web host, keeps short-lived access logs (IP, user
+        GitHub, like any web host, keeps short-lived access logs (IP, user
         agent, request path) for the purpose of operating the service. I don't
-        have a separate system reading those logs, and nothing on this site is
-        designed to identify or profile visitors.
-      </p>
-
-      <h2>Fonts</h2>
-      <p>
-        EB Garamond and Inter are self-hosted — bundled with the site and
-        served from the same origin as every other asset. Nothing is loaded
-        from Google Fonts or any other third-party CDN. This is deliberate:
-        rendering a page on this site doesn't expose your IP to anyone beyond
-        the host that's already serving you the HTML.
+        have access to those logs, and nothing on this site is designed to
+        identify or profile visitors.
       </p>
 
       <h2>Corrections &amp; contact</h2>
       <p>
-        If anything here is wrong, unclear, or concerning, email me at
+        If you have any amendments, questions, or concerns, please email me at
         <a href="mailto:alfredbirkelund@gmail.com">alfredbirkelund@gmail.com</a>.
-        That's also the right address for takedown requests, corrections to
-        essays, or anything else about how this site handles information.
       </p>
 
       <p class="meta">Last updated: April 2026.</p>
