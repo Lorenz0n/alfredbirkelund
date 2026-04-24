@@ -254,7 +254,7 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .canopy svg {
   display: block;
   width: 100%;
-  height: 36px;
+  height: 56px;
 }
 
 /* ---------- Archive page ---------- */
@@ -574,7 +574,7 @@ a[href^="https://"]:hover {
 
   /* Archive */
   .canopy { margin-bottom: 1.25rem; }
-  .canopy svg { height: 26px; }
+  .canopy svg { height: 22px; }
   .archive-head { padding-top: 1rem; padding-bottom: 0.25rem; }
   .archive-year { margin-top: 1.5rem; }
   .archive-row { line-height: 1.45; font-size: var(--size-body); }
