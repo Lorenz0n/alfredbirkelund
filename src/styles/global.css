@@ -263,9 +263,6 @@ img, svg { max-width: 100%; height: auto; display: block; }
   padding-bottom: 0.5rem;
 }
 .archive-head h1 {
-  color: var(--color-external);
-}
-.archive-head h1 {
   font-size: var(--size-title);
   margin-bottom: 0.4em;
 }
