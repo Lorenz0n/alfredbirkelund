@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EssayCard from '../components/EssayCard.astro';
 
@@ -7,20 +7,6 @@ const allEssays = await getCollection('essays', ({ data }) => !data.draft);
 allEssays.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const latest = allEssays.slice(0, 3);
-const favorites = allEssays.filter((e) => e.data.favorite).slice(0, 3);
-
-const categories = [
-  { key: 'economics', label: 'Economics' },
-  { key: 'finance', label: 'Finance' },
-  { key: 'technology', label: 'Technology' },
-  { key: 'philosophy', label: 'Philosophy' },
-  { key: 'misc', label: 'Miscellany' },
-] as const;
-
-const byCategory: Record<string, CollectionEntry<'essays'>[]> = {};
-for (const { key } of categories) {
-  byCategory[key] = allEssays.filter((e) => e.data.category === key).slice(0, 3);
-}
 ---
 <BaseLayout title="Alfred Birkelund">
   <section class="reading intro">
@@ -49,30 +35,6 @@ for (const { key } of categories) {
         {latest.map((essay) => <EssayCard essay={essay} />)}
       </div>
     </section>
-  )}
-
-  {favorites.length > 0 && (
-    <section class="reading section">
-      <div class="section__head">
-        <h2 class="section__title">Favorites</h2>
-      </div>
-      <div class="essays">
-        {favorites.map((essay) => <EssayCard essay={essay} showDate={false} />)}
-      </div>
-    </section>
-  )}
-
-  {categories.map(({ key, label }) =>
-    byCategory[key].length > 0 && (
-      <section class="reading section">
-        <div class="section__head">
-          <h2 class="section__title">{label}</h2>
-        </div>
-        <div class="essays">
-          {byCategory[key].map((essay) => <EssayCard essay={essay} />)}
-        </div>
-      </section>
-    )
   )}
 
   <div class="reading"><hr /></div>
