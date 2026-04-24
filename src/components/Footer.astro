@@ -1,0 +1,21 @@
+---
+import { profile } from '../data/cv';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <span>&copy; {year} {profile.name}</span>
+    <span class="site-footer__links">
+      {profile.connections.map((c, i) => (
+        <>
+          {i > 0 && <span class="site-footer__sep">·</span>}
+          <a href={c.url}>{c.label}</a>
+        </>
+      ))}
+      {profile.connections.length > 0 && <span class="site-footer__sep">·</span>}
+      <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      <span class="site-footer__sep">·</span>
+      <a href="/colophon">Colophon</a>
+    </span>
+  </div>
+</footer>

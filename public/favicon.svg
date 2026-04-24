@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#f3ebda"/>
+  <text
+    x="32"
+    y="46"
+    text-anchor="middle"
+    font-family="EB Garamond, Iowan Old Style, Palatino Linotype, Georgia, serif"
+    font-size="48"
+    font-weight="500"
+    fill="#1a1a1a"
+  >A</text>
+</svg>

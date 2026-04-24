@@ -1,0 +1,50 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+// Self-hosted fonts — bundled at build, no third-party (Google Fonts) request
+// on page load. See /colophon for why.
+import '@fontsource/eb-garamond/400.css';
+import '@fontsource/eb-garamond/500.css';
+import '@fontsource/eb-garamond/400-italic.css';
+import '@fontsource/eb-garamond/500-italic.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Alfred Birkelund — essays on economics, finance, technology, and philosophy.',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+  </head>
+  <body>
+    <Header />
+    <main><slot /></main>
+    <Footer />
+  </body>
+</html>

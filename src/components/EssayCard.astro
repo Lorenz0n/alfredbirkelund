@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  essay: CollectionEntry<'essays'>;
+  showDate?: boolean;
+}
+
+const { essay, showDate = true } = Astro.props;
+const { title, subtitle, date } = essay.data;
+
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<a class="essay-card" href={`/essays/${essay.slug}/`}>
+  {showDate && <span class="essay-card__date meta">{formatted}</span>}
+  <div class="essay-card__title">{title}</div>
+  {subtitle && <div class="essay-card__subtitle">{subtitle}</div>}
+</a>

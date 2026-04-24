@@ -1,0 +1,22 @@
+{
+  "name": "alfredbirkelund.com",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/mdx": "^3.1.9",
+    "@fontsource/eb-garamond": "^5.2.7",
+    "@fontsource/inter": "^5.2.8",
+    "astro": "^4.16.18",
+    "typescript": "^5.7.3"
+  }
+}

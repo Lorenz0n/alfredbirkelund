@@ -1,0 +1,35 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  essay: CollectionEntry<'essays'>;
+}
+
+const { essay } = Astro.props;
+const { title, subtitle, date, category } = essay.data;
+
+const formatted = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<BaseLayout title={`${title} — Alfred Birkelund`} description={subtitle}>
+  <article class="essay reading">
+    <header class="essay__header">
+      <span class="essay__category smallcaps">{category}</span>
+      <h1 class="essay__title">{title}</h1>
+      {subtitle && <p class="essay__subtitle">{subtitle}</p>}
+      <time class="essay__date meta" datetime={date.toISOString()}>{formatted}</time>
+    </header>
+
+    <div class="essay__body">
+      <slot />
+    </div>
+
+    <footer class="essay__footer">
+      <a href="/archive">← Back to archive</a>
+    </footer>
+  </article>
+</BaseLayout>

@@ -1,0 +1,110 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EssayCard from '../components/EssayCard.astro';
+
+const allEssays = await getCollection('essays', ({ data }) => !data.draft);
+allEssays.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const latest = allEssays.slice(0, 3);
+const favorites = allEssays.filter((e) => e.data.favorite).slice(0, 3);
+
+const categories = [
+  { key: 'economics', label: 'Economics' },
+  { key: 'finance', label: 'Finance' },
+  { key: 'technology', label: 'Technology' },
+  { key: 'philosophy', label: 'Philosophy' },
+  { key: 'misc', label: 'Miscellany' },
+] as const;
+
+const byCategory: Record<string, CollectionEntry<'essays'>[]> = {};
+for (const { key } of categories) {
+  byCategory[key] = allEssays.filter((e) => e.data.category === key).slice(0, 3);
+}
+---
+<BaseLayout title="Alfred Birkelund">
+  <section class="reading intro">
+    <p class="lead">
+      I'm Alfred Birkelund — an economics student at the University of Southern
+      Denmark and the builder of <a href="https://convictioninvestor.com">Conviction</a>,
+      an investment research platform. I write here about economics, finance,
+      technology, and occasionally philosophy.
+    </p>
+    <p>
+      You can reach me at
+      <a href="mailto:alfred@alfredbirkelund.com">alfred@alfredbirkelund.com</a>
+      or read <a href="#about">more about me below</a>.
+    </p>
+  </section>
+
+  <div class="reading"><hr /></div>
+
+  {latest.length > 0 && (
+    <section class="reading section">
+      <div class="section__head">
+        <h2 class="section__title">Latest</h2>
+        <a class="section__link" href="/archive">View all essays →</a>
+      </div>
+      <div class="essays">
+        {latest.map((essay) => <EssayCard essay={essay} />)}
+      </div>
+    </section>
+  )}
+
+  {favorites.length > 0 && (
+    <section class="reading section">
+      <div class="section__head">
+        <h2 class="section__title">Favorites</h2>
+      </div>
+      <div class="essays">
+        {favorites.map((essay) => <EssayCard essay={essay} showDate={false} />)}
+      </div>
+    </section>
+  )}
+
+  {categories.map(({ key, label }) =>
+    byCategory[key].length > 0 && (
+      <section class="reading section">
+        <div class="section__head">
+          <h2 class="section__title">{label}</h2>
+        </div>
+        <div class="essays">
+          {byCategory[key].map((essay) => <EssayCard essay={essay} />)}
+        </div>
+      </section>
+    )
+  )}
+
+  <div class="reading"><hr /></div>
+
+  <section id="about" class="reading about">
+    <h2>About</h2>
+    <p>
+      I'm finishing a BSc in Economics at the University of Southern Denmark
+      (SDU) and am applying to the Master in Quantitative Economics and Finance
+      (MiQE/F) at the University of St. Gallen for the 2027 intake. My
+      coursework has pushed me toward the intersection of econometrics,
+      financial markets, and the computational tools that make rigorous
+      empirical work possible.
+    </p>
+    <p>
+      Alongside my studies I'm building
+      <a href="https://convictioninvestor.com">Conviction</a> — an investment
+      research platform that synthesizes insider transactions, institutional
+      filings, political trading data, and company fundamentals into a single
+      view, so that serious investors can see a company from the angles that
+      usually sit in separate silos.
+    </p>
+    <p>
+      Outside of work I split my time between Nakskov and Odense. I read widely
+      — quantitative finance, AI, philosophy, and serious fiction — and I keep
+      myself honest with a calisthenics practice that refuses to let abstract
+      work crowd out the physical kind.
+    </p>
+    <p>
+      The best way to reach me is by email:
+      <a href="mailto:alfred@alfredbirkelund.com">alfred@alfredbirkelund.com</a>.
+      I read everything and reply to most things.
+    </p>
+  </section>
+</BaseLayout>

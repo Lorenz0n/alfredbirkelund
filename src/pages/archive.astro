@@ -1,0 +1,69 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EssayCard from '../components/EssayCard.astro';
+
+const essays = await getCollection('essays', ({ data }) => !data.draft);
+essays.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const recent = essays.slice(0, 5);
+
+const groups = new Map<number, CollectionEntry<'essays'>[]>();
+for (const essay of essays) {
+  const y = essay.data.date.getFullYear();
+  if (!groups.has(y)) groups.set(y, []);
+  groups.get(y)!.push(essay);
+}
+const years = [...groups.keys()].sort((a, b) => b - a);
+
+const mmdd = (d: Date) =>
+  `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
+---
+<BaseLayout title="Archive — Alfred Birkelund">
+  <section class="reading archive-head">
+    <h1>Archive</h1>
+    <nav class="archive-nav meta" aria-label="Sections">
+      <a href="#most-recent">Most recent</a>
+      <span class="archive-nav__sep">·</span>
+      <a href="#archived-posts">Archive</a>
+    </nav>
+  </section>
+
+  {recent.length > 0 && (
+    <section id="most-recent" class="reading section">
+      <div class="section__head">
+        <h2 class="section__title">Most recent</h2>
+      </div>
+      <div class="essays">
+        {recent.map((essay) => <EssayCard essay={essay} />)}
+      </div>
+    </section>
+  )}
+
+  <section id="archived-posts" class="reading section">
+    <div class="section__head">
+      <h2 class="section__title">Archived posts</h2>
+    </div>
+    {essays.length > 0 ? (
+      <div class="archive">
+        {years.map((year) => (
+          <div class="archive-year">
+            <h3 class="archive-year-heading">{year}</h3>
+            <ul class="archive-list">
+              {groups.get(year)!.map((essay) => (
+                <li class="archive-row">
+                  <span class="archive-row__date meta">[{mmdd(essay.data.date)}]</span>
+                  <a class="archive-row__title" href={`/essays/${essay.slug}/`}>
+                    {essay.data.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <p class="meta">No published essays yet.</p>
+    )}
+  </section>
+</BaseLayout>
