@@ -8,7 +8,6 @@ import { profile, education, work } from '../data/cv';
   <article class="cv reading">
     <header class="cv__header">
       <h1 class="cv__name">{profile.name}</h1>
-      <p class="cv__tagline">{profile.tagline}</p>
       <p class="cv__contact meta">
         <span>{profile.location}</span>
         <span class="cv__sep"> · </span>
@@ -68,8 +67,8 @@ import { profile, education, work } from '../data/cv';
     <section class="cv__section">
       <h2 class="cv__section-title">Contact</h2>
       <p>
-        Email <a href={`mailto:${profile.email}`}>{profile.email}</a>. I read
-        everything and reply to most things.
+        Email <a href={`mailto:${profile.email}`}>{profile.email}</a>. I reply
+        to most things.
       </p>
     </section>
   </article>
