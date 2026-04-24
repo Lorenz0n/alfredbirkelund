@@ -528,7 +528,7 @@ a[href^="https://"]:hover {
     --size-nav: 14px;
     --size-section: 22px;
     --size-title: 28px;
-    --pad-x: 1.25rem;
+    --pad-x: 1.75rem;
     --line: 1.55;
   }
 
