@@ -36,8 +36,8 @@ export interface Work {
 export const profile: Profile = {
   name: 'Alfred Birkelund',
   tagline: 'Economics student and founder of Conviction.',
-  location: 'Nakskov & Odense, Denmark',
-  email: 'alfred@alfredbirkelund.com',
+  location: 'Odense, Denmark',
+  email: 'alfredbirkelund@gmail.com',
   site: 'alfredbirkelund.com',
   // Edit URLs to match your actual handles. Order here is the render order.
   // To remove a connection, delete the object. To add one (Twitter, Bluesky,
@@ -53,7 +53,7 @@ export const education: Education[] = [
     degree: 'BSc in Economics',
     institution: 'University of Southern Denmark (SDU)',
     location: 'Odense, Denmark',
-    dates: '2023–2026 (expected)',
+    dates: '2024–2027',
     note: 'Focus on econometrics, financial economics, and quantitative methods.',
   },
 ];
@@ -65,6 +65,6 @@ export const work: Work[] = [
     url: 'https://convictioninvest.com',
     dates: '2024–present',
     description:
-      'Investment research platform synthesizing insider transactions, institutional filings, political trading data, and company fundamentals into a single view for serious investors.',
+      'Investment research platform synthesizing insider transactions, institutional filings, and company fundamentals into a single view for serious investors.',
   },
 ];
