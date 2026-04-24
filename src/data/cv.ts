@@ -56,19 +56,13 @@ export const education: Education[] = [
     dates: '2023–2026 (expected)',
     note: 'Focus on econometrics, financial economics, and quantitative methods.',
   },
-  {
-    degree: 'MSc in Quantitative Economics and Finance (MiQE/F)',
-    institution: 'University of St. Gallen (HSG)',
-    location: 'St. Gallen, Switzerland',
-    dates: 'Applying for 2027 intake',
-  },
 ];
 
 export const work: Work[] = [
   {
     role: 'Founder',
     organization: 'Conviction',
-    url: 'https://convictioninvestor.com',
+    url: 'https://convictioninvest.com',
     dates: '2024–present',
     description:
       'Investment research platform synthesizing insider transactions, institutional filings, political trading data, and company fundamentals into a single view for serious investors.',
