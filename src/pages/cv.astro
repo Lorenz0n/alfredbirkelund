@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Canopy from '../components/Canopy.astro';
 import { profile, education, work } from '../data/cv';
 ---
 <BaseLayout title={`CV — ${profile.name}`} description={profile.tagline}>
+  <Canopy />
   <article class="cv reading">
     <header class="cv__header">
       <h1 class="cv__name">{profile.name}</h1>
