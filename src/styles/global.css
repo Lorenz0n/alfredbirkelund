@@ -246,18 +246,18 @@ img, svg { max-width: 100%; height: auto; display: block; }
   margin-bottom: 1rem;
 }
 
-/* ---------- Archive page ---------- */
+/* ---------- Canopy (shared motif, archive + home) ---------- */
 .canopy {
-  margin: 0 0 1rem;
+  margin: 0 0 2rem;
   line-height: 0;
 }
 .canopy svg {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 200px;
+  height: 36px;
 }
 
+/* ---------- Archive page ---------- */
 .archive-head {
   padding-top: 1.25rem;
   padding-bottom: 0.5rem;
@@ -573,8 +573,8 @@ a[href^="https://"]:hover {
   .essays { gap: 1rem; }
 
   /* Archive */
-  .canopy { margin-bottom: 0.5rem; }
-  .canopy svg { height: 110px; }
+  .canopy { margin-bottom: 1.25rem; }
+  .canopy svg { height: 26px; }
   .archive-head { padding-top: 1rem; padding-bottom: 0.25rem; }
   .archive-year { margin-top: 1.5rem; }
   .archive-row { line-height: 1.45; font-size: var(--size-body); }
