@@ -63,7 +63,7 @@ export const work: Work[] = [
     role: 'Founder',
     organization: 'Conviction',
     url: 'https://convictioninvest.com',
-    dates: '2024–present',
+    dates: '2026–present',
     description:
       'Investment research platform synthesizing insider transactions, institutional filings, and company fundamentals into a single view for serious investors.',
   },
