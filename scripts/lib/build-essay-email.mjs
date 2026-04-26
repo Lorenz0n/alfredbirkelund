@@ -216,8 +216,25 @@ export function buildEssayEmail({ slug, title, subtitle, link, date, category, s
   // Render markdown → HTML.
   const rendered = marked.parse(body, { gfm: true, breaks: false });
 
+  // Rewrite footnotes for email-client compatibility (Gmail strips id
+  // attributes and Outlook ignores fragments, so intra-email anchor
+  // navigation is unreliable). Two changes:
+  //   1. Prose footnote refs (#footnote-N) are rewritten to the live
+  //      site's footnote anchor, so clicking opens the browser at
+  //      that footnote on the site (where anchors do work).
+  //   2. The `↩` backref links in the footnote section are removed
+  //      entirely — they'd be reliably broken in email otherwise.
+  // Footnote refs: marked-footnote outputs href="#footnote-N" only on the
+  // prose superscripts; the backref hrefs use a different pattern
+  // (#footnote-ref-N) so this replacement is safe.
+  let adjusted = rendered.replace(
+    /\shref="#footnote-(\d+)"/g,
+    ` href="${siteUrl}/essays/${slug}/#user-content-fn-$1"`,
+  );
+  adjusted = adjusted.replace(/<a[^>]*\sdata-footnote-backref[^>]*>[\s\S]*?<\/a>/g, '');
+
   // Add inline styles to the rendered HTML.
-  const styled = inlineStyles(rendered, siteUrl);
+  const styled = inlineStyles(adjusted, siteUrl);
 
   // Format date.
   const formatted = new Date(date).toLocaleDateString('en-US', {
