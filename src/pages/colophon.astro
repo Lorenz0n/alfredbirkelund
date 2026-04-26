@@ -15,17 +15,25 @@ import Canopy from '../components/Canopy.astro';
     <div class="essay__body">
       <h2>Privacy</h2>
       <p>
-        No cookies, no analytics, no tracking pixels, no embedded widgets, no
-        forms. Fonts are self-hosted, so rendering a page doesn't send any
-        request to Google or a third-party CDN. Visiting this site means your
-        browser asks GitHub's servers for HTML, CSS, and fonts — and that's
-        the whole exchange.
+        No cookies, no analytics, no tracking pixels, no embedded widgets.
+        Fonts are self-hosted, so rendering a page doesn't send any request
+        to Google or a third-party CDN. Reading the site means your browser
+        asks GitHub's servers for HTML, CSS, and fonts — and that's the
+        whole exchange.
+      </p>
+      <p>
+        The one third-party connection is the email subscribe form. If you
+        use it, the form posts to a small Cloudflare Worker, which uses
+        <a href="https://resend.com">Resend</a> to send you a confirmation
+        email and — once you click the link — adds your address to a Resend
+        audience. You stay there until you unsubscribe; every newsletter
+        has an unsubscribe link.
       </p>
       <p>
         GitHub, like any web host, keeps short-lived access logs (IP, user
-        agent, request path) for the purpose of operating the service. I don't
-        have access to those logs, and nothing on this site is designed to
-        identify or profile visitors.
+        agent, request path) for the purpose of operating the service. I
+        don't have access to those logs, and nothing on this site is
+        designed to identify or profile visitors.
       </p>
 
       <h2>Corrections &amp; contact</h2>
