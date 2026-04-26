@@ -44,6 +44,9 @@ const formatted = earliestDate.toLocaleDateString('en-US', {
 >
   <Canopy />
   <article class="essay reading">
+    <p class="essay__top-nav meta">
+      <a href={`/essays/${parts[0].slug}/`}>← Back to {seriesTitle}</a>
+    </p>
     <header class="essay__header">
       <span class="essay__category smallcaps">{parts[0].data.category}</span>
       <h1 class="essay__title">{seriesTitle}</h1>

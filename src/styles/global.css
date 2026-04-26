@@ -624,6 +624,16 @@ img, svg { max-width: 100%; height: auto; display: block; }
 }
 
 /* Aggregate series page (screen styles) */
+.essay__top-nav {
+  font-family: var(--font-sans);
+  margin: 0 0 1.5rem;
+}
+.essay__top-nav a {
+  border-bottom: none;
+  color: var(--color-muted);
+}
+.essay__top-nav a:hover { color: var(--color-accent); }
+
 .series-print-part {
   margin-top: 3em;
 }
@@ -942,6 +952,7 @@ a[href^="https://"]:hover {
   .site-footer,
   .cv__actions,
   .essay__print,
+  .essay__top-nav,
   .canopy,
   .essay__aside,
   .essay__pager,
