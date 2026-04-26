@@ -24,10 +24,13 @@ const C = {
   rule: '#d6cdb6',
 };
 
-// Stack chosen for email-client compatibility: real Garamond if installed,
-// then the same fallbacks the site uses.
-const FONT_SERIF = `Georgia,'EB Garamond','Iowan Old Style','Palatino Linotype',serif`;
-const FONT_SANS = `Helvetica,Arial,sans-serif`;
+// Same fonts the site uses, loaded from Google Fonts via <style> @import.
+// Modern email clients (Apple Mail, Gmail web/mobile, Outlook 365 web/mobile)
+// render the webfonts; Outlook desktop on Windows falls back to Georgia /
+// Helvetica via the rest of the stack.
+const FONT_SERIF = `'EB Garamond',Georgia,'Iowan Old Style','Palatino Linotype',serif`;
+const FONT_SANS = `'Inter',Helvetica,Arial,sans-serif`;
+const FONT_IMPORT_URL = `https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Inter:wght@400;500&display=swap`;
 
 const STYLES_BY_TAG = {
   h1: `font-family:${FONT_SERIF};font-size:32px;font-weight:500;line-height:1.2;margin:1em 0 0.4em;color:${C.ink};`,
@@ -192,6 +195,9 @@ export function buildEssayEmail({ slug, title, subtitle, link, date, category, s
   <meta charset="utf-8" />
   <title>${titleH}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    @import url('${FONT_IMPORT_URL}');
+  </style>
 </head>
 <body style="margin:0;padding:32px 16px;background:${C.bg};font-family:${FONT_SERIF};color:${C.ink};">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
