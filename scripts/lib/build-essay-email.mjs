@@ -155,19 +155,9 @@ function inlineStyles(html, siteUrl) {
     `$1 style="margin-top:3em;padding-top:1.5em;border-top:1px solid ${C.rule};font-size:14px;color:${C.ink};">`,
   );
 
-  // Wrap prose <sup> (only those with a data-footnote-ref child) in
-  // small-superscript styling.
-  html = html.replace(/<sup>(\s*<a[^>]*\sdata-footnote-ref[\s\S]*?<\/a>\s*)<\/sup>/g,
-    `<sup style="font-size:0.75em;line-height:0;vertical-align:super;">$1</sup>`,
-  );
-
-  // Style footnote ref + backref anchors directly (no underline).
-  html = html.replace(/<a([^>]*\sdata-footnote-ref[^>]*)>/g,
-    `<a$1 style="color:${C.accent};text-decoration:none;">`,
-  );
-  html = html.replace(/<a([^>]*\sdata-footnote-backref[^>]*)>/g,
-    `<a$1 style="color:${C.muted};text-decoration:none;font-size:0.9em;margin-left:0.3em;">`,
-  );
+  // (Prose footnote refs are already styled by the upstream rewrite that
+  // strips the <a> and inlines styling on the <sup>; backrefs are removed
+  // entirely. Nothing more to do for footnote anchors.)
 
   // ----- Pass 2: generic tag styling. Skips any tag that already has style.
   for (const [tag, style] of Object.entries(STYLES_BY_TAG)) {
@@ -224,12 +214,15 @@ export function buildEssayEmail({ slug, title, subtitle, link, date, category, s
   //      that footnote on the site (where anchors do work).
   //   2. The `↩` backref links in the footnote section are removed
   //      entirely — they'd be reliably broken in email otherwise.
-  // Footnote refs: marked-footnote outputs href="#footnote-N" only on the
-  // prose superscripts; the backref hrefs use a different pattern
-  // (#footnote-ref-N) so this replacement is safe.
+  // Footnotes: in email, intra-document anchor navigation is unreliable
+  // (Gmail strips ids, Outlook ignores fragments). Strip the link from
+  // prose footnote refs entirely — they read as plain superscript numbers.
+  // The full footnote text is in the references section at the bottom of
+  // the email anyway, so the reader scrolls to it. Backref ↩ links also
+  // dropped for the same reason.
   let adjusted = rendered.replace(
-    /\shref="#footnote-(\d+)"/g,
-    ` href="${siteUrl}/essays/${slug}/#user-content-fn-$1"`,
+    /<sup>\s*<a[^>]*\sdata-footnote-ref[^>]*>(\d+)<\/a>\s*<\/sup>/g,
+    '<sup style="font-size:0.75em;line-height:0;vertical-align:super;">$1</sup>',
   );
   adjusted = adjusted.replace(/<a[^>]*\sdata-footnote-backref[^>]*>[\s\S]*?<\/a>/g, '');
 
