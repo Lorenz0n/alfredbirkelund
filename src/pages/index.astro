@@ -72,7 +72,7 @@ const favorites = allEssays.filter((e) => e.data.favorite);
         try {
           const res = await fetch(form.action, { method: 'POST', body: fd });
           if (res.ok) {
-            showMessage('Thanks — you’re subscribed.');
+            showMessage('Almost there — check your inbox to confirm.');
           } else {
             showMessage('Something went wrong. Try again later, or email me directly.');
           }

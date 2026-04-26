@@ -10,11 +10,18 @@ out to your subscribers with the title, subtitle, and a link.
 ```
   Reader fills form on alfredbirkelund.com
         │
-        ▼
-  POST → Cloudflare Worker (worker/src/index.js)
+        ▼ POST /
+  Cloudflare Worker — sends a confirmation email via Resend's
+                      transactional /emails endpoint with an HMAC-signed
+                      token in the link. NO audience write yet.
+        │
+        ▼ user clicks link in email
+  Cloudflare Worker — GET /confirm?token=...
+                      verifies HMAC + token age (max 7 days)
+                      THEN adds contact to Resend Audience
         │
         ▼
-  Resend Audience  ◄────── you, manually managing list in Resend dashboard
+  Resend Audience  ◄────── confirmed subscribers only
         ▲
         │
   Broadcast send ◄── GitHub Action (.github/workflows/notify-subscribers.yml)
@@ -28,13 +35,20 @@ out to your subscribers with the title, subtitle, and a link.
 
 Three pieces:
 
-1. **Cloudflare Worker** (`worker/`) — accepts the subscribe form, calls Resend's
-   Audience API to add a contact. Free up to 100k requests/day.
+1. **Cloudflare Worker** (`worker/`) — handles POST `/` (subscribe → email
+   confirmation link) and GET `/confirm` (verify token → add to audience).
+   Tokens are HMAC-SHA256 signed and self-validating — no state stored.
+   Free tier: 100k requests/day.
 2. **Resend Audience** — your subscriber list, managed in your Resend dashboard.
+   Only confirmed (double-opt-in) emails make it here.
 3. **GitHub Action** (`.github/workflows/notify-subscribers.yml`) — runs after
    each successful Pages deploy, reads `dist/rss.xml`, finds GUIDs not yet in
    `scripts/last-broadcast.json`, sends one Resend Broadcast per new item, and
    commits the updated log back to the repo.
+
+**Why double opt-in?** Without it, anyone can sign up anyone's email address —
+that's a spam vector and a GDPR problem. The confirmation step proves the
+address-owner actually wanted in.
 
 ---
 
@@ -61,12 +75,23 @@ You only do these steps once. After that, publishing is `git push`.
 
 You need a free Cloudflare account (https://dash.cloudflare.com/sign-up).
 
+The Worker needs **four** secrets:
+
+| Secret | What it is |
+|---|---|
+| `RESEND_API_KEY` | Server-side key from step 1.3 |
+| `RESEND_AUDIENCE_ID` | Audience UUID from step 1.2 |
+| `RESEND_FROM` | Same as the GitHub Actions secret, e.g. `Alfred Birkelund <newsletter@alfredbirkelund.com>` — used as the sender for confirmation emails |
+| `CONFIRM_SECRET` | Random 32+ character string. Used to HMAC-sign confirmation tokens so they can't be forged. Generate with `openssl rand -hex 32` (or any password manager). Keep it somewhere safe — if it ever leaks, rotate by setting a new value via `wrangler secret put`; previously-issued tokens then stop working. |
+
 ```bash
 cd worker
 npm install
 npx wrangler login            # opens browser to authenticate
 npx wrangler secret put RESEND_API_KEY        # paste the key from step 1.3
 npx wrangler secret put RESEND_AUDIENCE_ID    # paste the UUID from step 1.2
+npx wrangler secret put RESEND_FROM           # paste the same from address as in step 3
+npx wrangler secret put CONFIRM_SECRET        # paste a random 32+ char string
 npx wrangler deploy
 ```
 
@@ -110,8 +135,11 @@ The notify workflow reads these at run time. They're not committed anywhere.
 
 ### Step 4 — First trial
 
-1. Subscribe yourself via the form on `alfredbirkelund.com`. Verify you
-   appear in the Resend audience dashboard.
+1. Subscribe yourself via the form on `alfredbirkelund.com`. The form
+   should replace itself with **"Almost there — check your inbox to confirm."**
+   Open the confirmation email, click the link — you should land on a
+   styled "Confirmed" page. Now verify the contact appears in the Resend
+   audience dashboard.
 2. Push a small change to any file under `src/content/essays/` to trigger the
    pipeline. (Or, faster: on GitHub → Actions → "Notify subscribers of new
    essays" → Run workflow manually.) Since `scripts/last-broadcast.json` is
@@ -162,10 +190,29 @@ That's the whole loop. GitHub Actions does the rest:
 
 ## Troubleshooting
 
-### Form submits but no contact appears in Resend
+### Form submits but no confirmation email arrives
 
 - Check the Worker's logs: `cd worker && npx wrangler tail`. Submit the form
   and watch the live log. Errors print there.
+- Most common cause: `RESEND_FROM` uses an unverified domain, or the API key
+  doesn't have permission to send transactional email. Verify the domain at
+  https://resend.com/domains.
+- The form's success message ("check your inbox") only means the Worker
+  accepted the request. The confirmation email is a separate Resend call —
+  if it fails, the form shows an error message instead.
+
+### Confirmation link says "expired or invalid"
+
+- Tokens are valid for 7 days. Past that, the user has to subscribe again.
+- If a valid-looking link is rejected, the most likely cause is that the
+  `CONFIRM_SECRET` was rotated since the token was issued. Old tokens become
+  invalid the moment the secret changes — that's by design, but tell
+  affected users to subscribe again.
+
+### Form submits but no contact appears in Resend after confirmation
+
+- Check the Worker's logs (`npx wrangler tail`) while clicking the confirm
+  link. Errors print there.
 - Most common cause: wrong `RESEND_API_KEY` or `RESEND_AUDIENCE_ID` in the
   Worker's secrets. Re-run `npx wrangler secret put RESEND_API_KEY`.
 
