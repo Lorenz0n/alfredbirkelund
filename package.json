@@ -9,14 +9,20 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check": "astro check"
+    "check": "astro check",
+    "build:og": "node scripts/build-og-image.mjs",
+    "build:favicon": "node scripts/build-favicon-png.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/mdx": "^3.1.9",
+    "@astrojs/rss": "^4.0.18",
     "@fontsource/eb-garamond": "^5.2.7",
     "@fontsource/inter": "^5.2.8",
     "astro": "^4.16.18",
     "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2"
   }
 }

@@ -1,0 +1,12 @@
+name = "alfredbirkelund-subscribe"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+# Secrets are NOT defined here. Set them with:
+#   cd worker
+#   npx wrangler secret put RESEND_API_KEY
+#   npx wrangler secret put RESEND_AUDIENCE_ID
+
+# Optional: bind a custom subdomain. By default the worker is reachable at
+# https://alfredbirkelund-subscribe.<your-account>.workers.dev/
+# To use https://subscribe.alfredbirkelund.com/ instead, see NEWSLETTER.md.

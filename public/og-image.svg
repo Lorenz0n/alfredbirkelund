@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Alfred Birkelund — essays on economics, finance, technology, and philosophy">
+  <rect width="1200" height="630" fill="#f3ebda"/>
+
+  <!-- Top hairline -->
+  <line x1="120" y1="160" x2="1080" y2="160" stroke="#d6cdb6" stroke-width="1"/>
+
+  <!-- Wordmark -->
+  <text x="120" y="135" font-family="EB Garamond, Iowan Old Style, Palatino Linotype, Georgia, serif"
+        font-size="34" font-weight="500" fill="#1a1a1a" letter-spacing="0.5">
+    Alfred Birkelund
+  </text>
+
+  <!-- Main title -->
+  <text x="120" y="340" font-family="EB Garamond, Iowan Old Style, Palatino Linotype, Georgia, serif"
+        font-size="84" font-weight="500" fill="#1a1a1a">
+    Essays
+  </text>
+  <text x="120" y="430" font-family="EB Garamond, Iowan Old Style, Palatino Linotype, Georgia, serif"
+        font-size="36" font-style="italic" fill="#5b4a2c">
+    on economics, finance, technology, &amp; philosophy.
+  </text>
+
+  <!-- Bottom hairline -->
+  <line x1="120" y1="500" x2="1080" y2="500" stroke="#d6cdb6" stroke-width="1"/>
+
+  <!-- Domain -->
+  <text x="120" y="555" font-family="Inter, -apple-system, Helvetica, Arial, sans-serif"
+        font-size="20" font-weight="500" fill="#7a7266" letter-spacing="2">
+    ALFREDBIRKELUND.COM
+  </text>
+</svg>

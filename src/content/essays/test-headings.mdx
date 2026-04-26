@@ -1,0 +1,106 @@
+---
+title: "Test: Single-Page Essay with Headings"
+subtitle: "A reference essay demonstrating every formatting feature."
+date: 2026-04-26
+category: philosophy
+favorite: false
+draft: true
+toc: true
+---
+
+import Figure from '~/components/Figure.astro';
+import Detail from '~/components/Detail.astro';
+import Pullquote from '~/components/Pullquote.astro';
+
+<span class="dropcap">T</span>his essay exists as a living reference. If you ever forget how a particular formatting element is supposed to work, open `src/content/essays/test-headings.mdx` and copy the pattern. Everything below is a worked example.
+
+The layout uses an automatic table of contents because the frontmatter includes `toc: true`. It is rendered from the H2 and H3 headings on this page.
+
+## A first major section
+
+This is a level-2 heading. They divide an essay into chapters when chapters are not long enough to warrant their own page. Use them generously — they help the reader and they populate the sidebar.
+
+Inside a section you have all the usual prose tools. **Bold for emphasis** and *italic for titles, foreign words, or a softer kind of stress*. You can [link to internal pages](/archive) — these render in the warm brown ink — and you can also [link to external sources](https://situational-awareness.ai/) — these render in dark forest green. The site styles them differently on purpose so the reader knows whether a click leaves the site.
+
+### A subsection with a finer point
+
+Level-3 headings nest inside their parent. They show up in the sidebar indented one level. Use them for genuine sub-divisions, not just because you want to bold a phrase.
+
+#### A sub-subsection for the rare case you need it
+
+Level-4 headings exist for unusually structured pieces — a long methods section, a table that needs internal headings, an enumeration of cases. They render smaller and italic, so the page hierarchy stays legible. **Note**: H4 headings do *not* appear in the TOC sidebar. The sidebar lists only H2 and H3, by design — anything finer would clutter it. If you find yourself reaching for H4 often, the section probably wants to become its own essay or its own series part.
+
+A footnote looks like this in the prose,[^1] and the full reference appears at the very bottom of the essay, with a back-arrow to return you to where you were reading. Multiple footnotes work the same way.[^2]
+
+## Figures and images
+
+A figure with a caption is one component import away. Put images in `public/essays/<slug>/`, then reference them by absolute path:
+
+<Figure
+  src="/essays/test-headings/figure-1.svg"
+  alt="A schematic curve rising slowly then steeply over time"
+  caption="Figure 1. Cost over time, illustrative. Hand-drawn placeholder until the real chart is ready."
+/>
+
+If the image is wide enough to deserve breaking out of the text column, pass `wide`:
+
+<Figure
+  src="/essays/test-headings/figure-1.svg"
+  alt="The same curve, presented wider"
+  caption="Figure 2. Same data, displayed at full width."
+  wide
+/>
+
+## Pullquotes for emphasis
+
+When a sentence is doing more work than the surrounding prose, lift it out:
+
+<Pullquote cite="Some attribution, optional">
+The past is the only laboratory we have. The next decade may be the most important experiment it has ever run.
+</Pullquote>
+
+The pullquote is not a substitute for an argument; it is a way to let one breathe.
+
+## Collapsible explainers
+
+Sometimes a paragraph is a digression that the engaged reader will want and the casual reader will want to skip. The `<Detail>` component gives them a click-to-expand box, so the main thread of the essay stays clean.
+
+<Detail summary="What is Baumol's cost disease, exactly?">
+The economist William Baumol observed in 1966 that productivity gains in manufacturing pull wages up across the whole labour market — including in sectors where productivity has not improved. A string quartet still requires four players and forty minutes; a barber still cuts one head of hair at a time. As a consequence, services that resist mechanisation get more expensive over time relative to goods that don't.
+
+This is why a haircut, a violin lesson, and a hospital bed all cost more, in real terms, than they did fifty years ago, even though the underlying activity is essentially unchanged.
+</Detail>
+
+You can have multiple expanders in a row:
+
+<Detail summary="And why does this matter for the welfare state?">
+Public services are disproportionately the labour-intensive kind. Healthcare, education, eldercare, defence — all dominated by human time. So Baumol's effect bites government budgets harder than private-sector budgets, and it bites them on a recurring basis as productivity in the rest of the economy advances.
+</Detail>
+
+## Lists and quotes
+
+Use ordered lists when sequence matters:
+
+1. First, set the frontmatter correctly.
+2. Then write the prose.
+3. Add components where they earn their place.
+
+And unordered lists when it doesn't:
+
+- Bold for emphasis
+- Italic for titles
+- Footnotes for sources
+- Figures for visuals
+
+A simple block quote, for when you want to drop in someone else's words:
+
+> The function of muscle is to pull and not to push, except in the case of the genitals and the tongue.
+> — Leonardo da Vinci
+
+## What this page is not
+
+It is not a published essay. The title is prefixed with **Test:** so it reads as a reference. Keep it published while you are writing — it is faster to copy patterns from a live page than from raw markdown — and either delete it or flip `draft: true` once your own essays cover the same ground.
+
+[^1]: This is the first footnote. Footnotes use GitHub-flavoured markdown syntax and are placed at the bottom of the file. The link in the text and the back-arrow here are wired up automatically.
+
+[^2]: A second footnote, which can be longer than a single sentence. You can include [links inside footnotes](https://situational-awareness.ai/) and they style the same as inline links.

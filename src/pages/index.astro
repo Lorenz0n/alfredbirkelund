@@ -4,10 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Canopy from '../components/Canopy.astro';
 import EssayCard from '../components/EssayCard.astro';
 
-const allEssays = await getCollection('essays', ({ data }) => !data.draft);
+const allEssays = await getCollection('essays', ({ data }) => !data.draft && !data.unlisted);
 allEssays.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const latest = allEssays.slice(0, 3);
+const favorites = allEssays.filter((e) => e.data.favorite);
 ---
 <BaseLayout title="Alfred Birkelund">
   <Canopy />
@@ -23,20 +24,91 @@ const latest = allEssays.slice(0, 3);
       <a href="mailto:alfredbirkelund@gmail.com">alfredbirkelund@gmail.com</a>
       or read <a href="#about">more about me below</a>.
     </p>
+    <form
+      id="subscribe"
+      class="intro__subscribe"
+      action="https://alfredbirkelund-subscribe.birkelund.workers.dev/"
+      method="post"
+    >
+      <label class="intro__subscribe-label" for="sub-email">
+        Want a heads-up when I publish?
+      </label>
+      <input
+        class="intro__subscribe-input"
+        id="sub-email"
+        type="email"
+        name="email"
+        placeholder="email"
+        autocomplete="email"
+        aria-label="Email address"
+        required
+      />
+      <button class="intro__subscribe-btn" type="submit" aria-label="Subscribe">→</button>
+      <!-- Honeypot: hidden from users, filled by bots. Real submissions leave this blank. -->
+      <input
+        type="text"
+        name="website"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+        style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0;"
+      />
+    </form>
   </section>
+
+  <script is:inline>
+    (() => {
+      const form = document.getElementById('subscribe');
+      if (!form) return;
+      const showMessage = (text) => {
+        const p = document.createElement('p');
+        p.className = 'intro__subscribe-thanks';
+        p.textContent = text;
+        form.replaceWith(p);
+      };
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const fd = new FormData(form);
+        try {
+          const res = await fetch(form.action, { method: 'POST', body: fd });
+          if (res.ok) {
+            showMessage('Thanks — you’re subscribed.');
+          } else {
+            showMessage('Something went wrong. Try again later, or email me directly.');
+          }
+        } catch (_) {
+          showMessage('Could not reach the server. Try again, or email me directly.');
+        }
+      });
+    })();
+  </script>
 
   <div class="reading"><hr /></div>
 
-  {latest.length > 0 && (
-    <section class="reading section">
+  {favorites.length > 0 && (
+    <section class="reading section section--favorites">
       <div class="section__head">
-        <h2 class="section__title">Latest</h2>
-        <a class="section__link" href="/archive">View all essays →</a>
+        <h2 class="section__title">Favorites</h2>
       </div>
       <div class="essays">
-        {latest.map((essay) => <EssayCard essay={essay} />)}
+        {favorites.map((essay) => <EssayCard essay={essay} />)}
       </div>
     </section>
+  )}
+
+  {latest.length > 0 && (
+    <>
+      {favorites.length > 0 && <div class="reading"><hr /></div>}
+      <section class="reading section">
+        <div class="section__head">
+          <h2 class="section__title">Latest essays</h2>
+          <a class="section__link" href="/archive">View all essays →</a>
+        </div>
+        <div class="essays">
+          {latest.map((essay) => <EssayCard essay={essay} />)}
+        </div>
+      </section>
+    </>
   )}
 
   <div class="reading"><hr /></div>

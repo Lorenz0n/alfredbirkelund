@@ -112,6 +112,18 @@ img, svg { max-width: 100%; height: auto; display: block; }
   font-weight: 500;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ---------- Header ---------- */
 .site-header {
   padding: 2rem 0 1.5rem;
@@ -236,6 +248,87 @@ img, svg { max-width: 100%; height: auto; display: block; }
   line-height: 1.4;
 }
 
+/* ---------- Favorites highlight panel ----------
+   Forest-green inset panel echoing the canopy. Used on home + archive to
+   visually elevate the favorites section as featured work. */
+.section--favorites {
+  background: var(--color-external);
+  color: var(--color-bg);
+  padding: 1.75rem 1.75rem 2rem;
+  border-radius: 5px;
+  margin: 1.5rem auto;
+}
+.section--favorites .section__title { color: var(--color-bg); }
+
+.section--favorites .essay-card { color: var(--color-bg); }
+.section--favorites .essay-card .essay-card__date {
+  color: rgba(243, 235, 218, 0.7);
+}
+.section--favorites .essay-card .essay-card__sep {
+  color: rgba(243, 235, 218, 0.35);
+}
+.section--favorites .essay-card .essay-card__subtitle {
+  color: rgba(243, 235, 218, 0.78);
+}
+.section--favorites .essay-card:hover .essay-card__title {
+  color: #ffffff;
+}
+
+/* ---------- Inline subscribe form (tiny, in intro) ---------- */
+.intro__subscribe {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+  font-size: var(--size-body);
+  color: var(--color-muted);
+}
+.intro__subscribe-label {
+  font-style: italic;
+  margin-right: 0.15em;
+}
+.intro__subscribe-input {
+  flex: 1 1 13em;
+  min-width: 0;
+  font-family: var(--font-serif);
+  font-size: inherit;
+  font-style: italic;
+  color: var(--color-ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--color-rule);
+  padding: 0.1em 0.2em;
+  transition: border-color var(--ease);
+}
+.intro__subscribe-input:focus {
+  outline: none;
+  border-bottom-color: var(--color-accent);
+}
+.intro__subscribe-input::placeholder {
+  color: var(--color-muted);
+  font-style: italic;
+}
+.intro__subscribe-btn {
+  font-family: var(--font-serif);
+  font-size: 1.2em;
+  line-height: 1;
+  color: var(--color-accent);
+  background: transparent;
+  border: 0;
+  padding: 0 0.25em;
+  cursor: pointer;
+  transition: color var(--ease);
+}
+.intro__subscribe-btn:hover {
+  color: var(--color-accent-hover);
+}
+.intro__subscribe-thanks {
+  margin-top: 1.25rem;
+  font-style: italic;
+  color: var(--color-muted);
+}
+
 /* ---------- About section ---------- */
 .about {
   padding-top: 2rem;
@@ -279,6 +372,45 @@ img, svg { max-width: 100%; height: auto; display: block; }
 }
 
 .archive { margin-top: 0.25rem; }
+
+/* ---------- Filter pills ---------- */
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 0.5rem 0 1.75rem;
+}
+.filter__btn {
+  font-family: var(--font-sans);
+  font-size: var(--size-meta);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--color-muted);
+  background: transparent;
+  border: 1px solid var(--color-rule);
+  padding: 0.4em 0.95em;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--ease), border-color var(--ease), background var(--ease);
+}
+.filter__btn:hover {
+  color: var(--color-ink);
+  border-color: var(--color-accent);
+}
+.filter__btn.is-active {
+  color: var(--color-bg);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+.filter__btn.is-active:hover {
+  color: var(--color-bg);
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+/* ---------- Hidden utility (used by filters) ---------- */
+.is-hidden { display: none !important; }
 .archive-year { margin-top: 2.25rem; }
 .archive-year:first-child { margin-top: 0.5rem; }
 .archive-year-heading {
@@ -342,6 +474,30 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .essay__date {
   display: block;
   margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+.essay__sep,
+.essay-card__sep {
+  color: var(--color-rule);
+  padding: 0 0.15em;
+}
+
+/* "Save as PDF" inline button in essay header — looks like a link */
+.essay__print-btn {
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  color: var(--color-accent);
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-rule);
+  transition: color var(--ease), border-color var(--ease);
+}
+.essay__print-btn:hover {
+  color: var(--color-accent-hover);
+  border-bottom-color: var(--color-accent);
 }
 
 .essay__body p { margin: 0 0 1.2em; }
@@ -353,13 +509,20 @@ img, svg { max-width: 100%; height: auto; display: block; }
   font-size: 22px;
   margin: 1.8em 0 0.5em;
 }
+.essay__body h4 {
+  font-size: 19px;
+  font-weight: 500;
+  font-style: italic;
+  margin: 1.5em 0 0.4em;
+}
 .essay__body blockquote {
-  border-left: 2px solid var(--color-rule);
+  border-left: 2px solid var(--color-accent);
   margin: 1.5em 0;
   padding-left: 1.25em;
-  color: var(--color-muted);
+  color: var(--color-ink);
   font-style: italic;
 }
+.essay__body blockquote p:last-child { margin-bottom: 0; }
 .essay__body code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.85em;
@@ -396,6 +559,231 @@ img, svg { max-width: 100%; height: auto; display: block; }
   font-size: var(--size-nav);
 }
 .essay__footer a { border-bottom: none; }
+
+/* ---------- Essay layout: with aside (series sidebar / TOC) ---------- */
+.essay--with-aside {
+  display: grid;
+  grid-template-columns: 220px minmax(0, var(--width-reading)) 1fr;
+  gap: 2.5rem;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 var(--pad-x);
+}
+.essay--with-aside .essay__aside {
+  grid-column: 1;
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+  font-family: var(--font-sans);
+  font-size: var(--size-meta);
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+.essay--with-aside .essay__main {
+  grid-column: 2;
+  min-width: 0;
+}
+
+/* ---------- Series sidebar ---------- */
+.series-nav__title,
+.toc__title {
+  margin-bottom: 0.6rem;
+}
+.series-nav__list,
+.toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: none;
+}
+.series-nav__item {
+  margin: 0 0 0.35rem;
+  line-height: 1.4;
+}
+.series-nav__item a {
+  display: grid;
+  grid-template-columns: 2em 1fr;
+  gap: 0.4em;
+  color: var(--color-muted);
+  border-bottom: none;
+  padding: 0.15em 0;
+  transition: color var(--ease);
+}
+.series-nav__item a:hover { color: var(--color-accent); }
+.series-nav__num {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-rule);
+}
+.series-nav__item.is-current a { color: var(--color-ink); }
+.series-nav__item.is-current .series-nav__num { color: var(--color-accent); }
+
+/* ---------- Table of contents ---------- */
+.toc { margin-top: 1.5rem; }
+.series-nav + .toc {
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-rule);
+}
+.toc__item {
+  margin: 0 0 0.3rem;
+  line-height: 1.35;
+}
+.toc__item a {
+  color: var(--color-muted);
+  border-bottom: none;
+  transition: color var(--ease);
+}
+.toc__item a:hover { color: var(--color-accent); }
+.toc__item--depth-3 { padding-left: 1em; font-size: 0.95em; }
+
+/* ---------- Pager (prev / next within series) ---------- */
+.essay__pager {
+  margin-top: 3.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-rule);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  font-family: var(--font-sans);
+}
+.essay__pager-link {
+  display: block;
+  border-bottom: none;
+  color: var(--color-ink);
+}
+.essay__pager-link--next { text-align: right; }
+.essay__pager-link:hover .essay__pager-title { color: var(--color-accent); }
+.essay__pager-dir {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.essay__pager-title {
+  font-family: var(--font-serif);
+  font-size: var(--size-lead);
+  font-weight: 500;
+  line-height: 1.3;
+  transition: color var(--ease);
+}
+
+/* ---------- Figure (image with caption) ---------- */
+.essay__body .figure {
+  margin: 2em 0;
+}
+.essay__body .figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-rule);
+  border-radius: 3px;
+  background: var(--color-surface);
+}
+.essay__body .figure--wide {
+  margin-left: calc((var(--width-reading) - 100%) / 2);
+  margin-right: calc((var(--width-reading) - 100%) / 2);
+  width: auto;
+  max-width: var(--width-wide);
+}
+.essay__body .figure--wide img { max-width: 100%; }
+.figure__caption {
+  margin-top: 0.6em;
+  font-family: var(--font-sans);
+  font-size: var(--size-meta);
+  line-height: 1.5;
+  color: var(--color-muted);
+  text-align: center;
+}
+
+/* ---------- Detail (collapsible explainer) ---------- */
+.essay__body .detail {
+  margin: 1.75em 0;
+  border: 1px solid var(--color-rule);
+  border-radius: 4px;
+  background: var(--color-surface);
+}
+.detail__summary {
+  cursor: pointer;
+  padding: 0.7em 2.5em 0.7em 1em;
+  font-family: var(--font-sans);
+  font-size: var(--size-meta);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-weight: 500;
+  list-style: none;
+  user-select: none;
+  position: relative;
+  transition: color var(--ease);
+}
+.detail__summary::-webkit-details-marker { display: none; }
+.detail__summary::after {
+  content: '+';
+  position: absolute;
+  right: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-serif);
+  font-size: 1.4em;
+  line-height: 1;
+  color: var(--color-accent);
+  font-weight: 400;
+}
+.detail[open] .detail__summary::after { content: '−'; }
+.detail__summary:hover { color: var(--color-ink); }
+.detail__body {
+  padding: 0.4em 1.25em 1em;
+  border-top: 1px solid var(--color-rule);
+}
+.detail__body p { margin: 0.8em 0; font-size: 0.96em; }
+.detail__body p:first-child { margin-top: 0.6em; }
+.detail__body p:last-child { margin-bottom: 0; }
+
+/* ---------- Pullquote ---------- */
+.essay__body .pullquote {
+  margin: 2em 0;
+  padding: 0.5em 0 0.5em 1.25em;
+  border-left: 3px solid var(--color-accent);
+}
+.pullquote__quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--size-lead);
+  line-height: 1.4;
+  color: var(--color-ink);
+}
+.pullquote__quote p { margin: 0 0 0.5em; }
+.pullquote__quote p:last-child { margin-bottom: 0; }
+.pullquote__cite {
+  display: block;
+  margin-top: 0.6em;
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-size: var(--size-meta);
+  color: var(--color-muted);
+}
+
+/* ---------- Footnotes (markdown [^1]) ---------- */
+.essay__body sup { font-size: 0.7em; vertical-align: super; line-height: 0; }
+.essay__body sup a {
+  border-bottom: none;
+  padding: 0 0.1em;
+}
+.essay__body [data-footnotes] {
+  margin-top: 3.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid var(--color-rule);
+  font-size: 0.92em;
+}
+.essay__body [data-footnotes] ol {
+  padding-left: 1.5em;
+  margin: 0;
+}
+.essay__body [data-footnotes] li {
+  margin-bottom: 0.5em;
+  line-height: 1.5;
+}
+.essay__body [data-footnotes] a.data-footnote-backref {
+  border-bottom: none;
+  font-size: 0.9em;
+  margin-left: 0.3em;
+}
 
 /* ---------- CV page ---------- */
 .cv {
@@ -517,7 +905,8 @@ a[href^="https://"]:hover {
   main { padding: 0; }
   .site-header,
   .site-footer,
-  .cv__actions {
+  .cv__actions,
+  .essay__print {
     display: none !important;
   }
   .reading, .container {
@@ -589,9 +978,46 @@ a[href^="https://"]:hover {
   .essay__footer { margin-top: 2.5rem; }
   .essay__body h2 { font-size: 22px; margin: 1.6em 0 0.5em; }
   .essay__body h3 { font-size: 19px; margin: 1.4em 0 0.4em; }
+  .essay__body h4 { font-size: 17px; margin: 1.2em 0 0.3em; }
+
+  /* Aside (series + TOC) collapses above the article on mobile */
+  .essay--with-aside {
+    display: block;
+    max-width: var(--width-reading);
+    padding: 0 var(--pad-x);
+  }
+  .essay--with-aside .essay__aside {
+    position: static;
+    margin: 0 0 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--color-rule);
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* Pager stacks vertically */
+  .essay__pager {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+  .essay__pager-link--next { text-align: left; }
+
+  /* Figures lose the wide pull-out on narrow screens */
+  .essay__body .figure--wide { margin-left: 0; margin-right: 0; }
 
   /* About */
   .about { padding-top: 1.25rem; padding-bottom: 0.5rem; }
+
+  /* Favorites panel — tighter padding on small screens */
+  .section--favorites {
+    padding: 1.25rem 1.25rem 1.5rem;
+    margin: 1rem auto;
+  }
+
+  /* Inline subscribe — gives input full width below the label on narrow screens */
+  .intro__subscribe { gap: 0.3em 0.5em; }
+  .intro__subscribe-label { flex-basis: 100%; }
 
   /* CV */
   .cv__header { padding: 1rem 0 1.25rem; margin-bottom: 1.25rem; }

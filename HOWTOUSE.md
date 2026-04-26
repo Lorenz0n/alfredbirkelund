@@ -203,6 +203,11 @@ Less good:
 Essays live in `src/content/essays/` as `.mdx` files. MDX is Markdown that
 also lets you drop in components — but for plain prose you only need Markdown.
 
+> For everything beyond plain prose — images, footnotes, headings, series,
+> collapsible explainers, pullquotes — see **`WRITING.md`**. Two living
+> reference essays sit in `src/content/essays/`: `test-headings.mdx` (single
+> page with TOC) and `test-series/` (multi-page with sidebar).
+
 1. Create `src/content/essays/<slug>.mdx`. The filename (minus `.mdx`)
    becomes the URL: `rate-cuts.mdx` → `https://alfredbirkelund.com/essays/rate-cuts/`.
 2. Start with the required frontmatter — this is the YAML block at the top

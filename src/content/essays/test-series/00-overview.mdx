@@ -1,0 +1,26 @@
+---
+title: "Test Series — Overview"
+subtitle: "An example of a multi-part essay split across pages."
+date: 2026-04-26
+category: technology
+favorite: false
+draft: true
+series: "test-series"
+seriesTitle: "Test Series"
+part: 0
+partTitle: "Overview"
+---
+
+import Figure from '~/components/Figure.astro';
+
+<span class="dropcap">T</span>his is the overview page of a test series. It exists to demonstrate how a longer essay — too long to read in one sitting — can be split into chapters that each get their own URL, while a sticky sidebar on the left keeps the whole structure visible and one click away.
+
+A series shares a `series` slug across all its parts. The part with `part: 0` is the overview; subsequent parts go in order. The sidebar is rendered automatically from those frontmatter fields. So is the previous/next pager at the bottom of each page.
+
+<Figure
+  src="/essays/test-series/timeline.svg"
+  alt="A schematic timeline with three labelled markers"
+  caption="A figure can sit on the overview page just like any other essay."
+/>
+
+The next page begins the argument proper.

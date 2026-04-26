@@ -15,8 +15,8 @@ interface Props {
 }
 
 const { essay } = Astro.props;
-const { Content } = await essay.render();
+const { Content, headings } = await essay.render();
 ---
-<EssayLayout essay={essay}>
+<EssayLayout essay={essay} headings={headings}>
   <Content />
 </EssayLayout>

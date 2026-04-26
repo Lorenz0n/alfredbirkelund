@@ -1,0 +1,16 @@
+{
+  "name": "alfredbirkelund-subscribe-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "secret:resend-key": "wrangler secret put RESEND_API_KEY",
+    "secret:audience-id": "wrangler secret put RESEND_AUDIENCE_ID"
+  },
+  "devDependencies": {
+    "wrangler": "^4.85.0"
+  }
+}

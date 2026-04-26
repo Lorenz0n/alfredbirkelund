@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+
+interface Props {
+  series: string;
+  current: string;
+}
+
+const { series, current } = Astro.props;
+
+const all = await getCollection('essays', ({ data }) => data.series === series && !data.draft);
+all.sort((a, b) => (a.data.part ?? 0) - (b.data.part ?? 0));
+
+const seriesTitle =
+  all.find((e) => e.data.seriesTitle)?.data.seriesTitle ?? series;
+---
+<nav class="series-nav" aria-label="Series contents">
+  <div class="series-nav__title smallcaps">{seriesTitle}</div>
+  <ol class="series-nav__list">
+    {all.map((part) => (
+      <li class={`series-nav__item${part.slug === current ? ' is-current' : ''}`}>
+        <a href={`/essays/${part.slug}/`}>
+          <span class="series-nav__num">{String(part.data.part ?? 0).padStart(2, '0')}</span>
+          <span class="series-nav__label">{part.data.partTitle ?? part.data.title}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>

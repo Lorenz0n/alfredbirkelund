@@ -1,0 +1,28 @@
+---
+title: "Test Series — Part I: The Mechanism"
+subtitle: "How the underlying machinery is meant to work."
+date: 2026-04-26
+category: technology
+favorite: false
+draft: true
+series: "test-series"
+seriesTitle: "Test Series"
+part: 1
+partTitle: "I. The Mechanism"
+---
+
+import Detail from '~/components/Detail.astro';
+
+This is the first numbered part of the series. Each part is its own `.mdx` file inside `src/content/essays/test-series/`, and the URL follows the folder structure — this page lives at `/essays/test-series/01-the-mechanism/`.
+
+A part can contain anything an essay can contain: headings, footnotes, figures, expanders. Notice the sidebar on the left highlights the current page and lets the reader jump to any other part directly.
+
+## Why a sub-heading still works
+
+Inside a series part, you can still use `##` headings to chunk the page further. The TOC sidebar is **not** generated for series pages by default — the series sidebar already serves the same purpose for navigation — but you can opt in by setting `toc: true` on a part if a part is itself long enough to warrant one.
+
+<Detail summary="When to split a part further with a TOC">
+A series part with a TOC is a hybrid: the user gets the series-wide sidebar showing every part, then a separate TOC underneath for headings inside the current part. This is rare but useful when one part is a small essay in its own right.
+</Detail>
+
+The next page closes the argument.

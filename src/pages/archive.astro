@@ -4,10 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Canopy from '../components/Canopy.astro';
 import EssayCard from '../components/EssayCard.astro';
 
-const essays = await getCollection('essays', ({ data }) => !data.draft);
+const essays = await getCollection('essays', ({ data }) => !data.draft && !data.unlisted);
 essays.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const recent = essays.slice(0, 5);
+const favorites = essays.filter((e) => e.data.favorite);
 
 const groups = new Map<number, CollectionEntry<'essays'>[]>();
 for (const essay of essays) {
@@ -16,6 +17,9 @@ for (const essay of essays) {
   groups.get(y)!.push(essay);
 }
 const years = [...groups.keys()].sort((a, b) => b - a);
+
+// Categories that actually have at least one essay — sorted alphabetically.
+const categoriesInUse = [...new Set(essays.map((e) => e.data.category))].sort();
 
 const mmdd = (d: Date) =>
   `${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
@@ -26,47 +30,118 @@ const mmdd = (d: Date) =>
   <section class="reading archive-head">
     <h1>Archive</h1>
     <nav class="archive-nav meta" aria-label="Sections">
-      <a href="#most-recent">Most recent</a>
+      {favorites.length > 0 && (
+        <>
+          <a href="#favorites">Favorites</a>
+          <span class="archive-nav__sep">·</span>
+        </>
+      )}
+      <a href="#latest-essays">Latest essays</a>
       <span class="archive-nav__sep">·</span>
       <a href="#archived-posts">Archive</a>
     </nav>
   </section>
 
-  {recent.length > 0 && (
-    <section id="most-recent" class="reading section">
-      <div class="section__head">
-        <h2 class="section__title">Most recent</h2>
-      </div>
-      <div class="essays">
-        {recent.map((essay) => <EssayCard essay={essay} />)}
-      </div>
-    </section>
-  )}
-
-  <section id="archived-posts" class="reading section">
-    <div class="section__head">
-      <h2 class="section__title">Archived posts</h2>
-    </div>
-    {essays.length > 0 ? (
-      <div class="archive">
-        {years.map((year) => (
-          <div class="archive-year">
-            <h3 class="archive-year-heading">{year}</h3>
-            <ul class="archive-list">
-              {groups.get(year)!.map((essay) => (
-                <li class="archive-row">
-                  <span class="archive-row__date meta">[{mmdd(essay.data.date)}]</span>
-                  <a class="archive-row__title" href={`/essays/${essay.slug}/`}>
-                    {essay.data.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+  <div class="reading archive-root">
+    {categoriesInUse.length > 1 && (
+      <nav class="filter" aria-label="Filter by category">
+        <button class="filter__btn is-active" data-filter="all" type="button">All</button>
+        {categoriesInUse.map((c) => (
+          <button class="filter__btn" data-filter={c} type="button">{c}</button>
         ))}
-      </div>
-    ) : (
-      <p class="meta">No published essays yet.</p>
+      </nav>
     )}
-  </section>
+
+    {favorites.length > 0 && (
+      <section id="favorites" class="section section--favorites">
+        <div class="section__head">
+          <h2 class="section__title">Favorites</h2>
+        </div>
+        <div class="essays">
+          {favorites.map((essay) => <EssayCard essay={essay} />)}
+        </div>
+      </section>
+    )}
+
+    {recent.length > 0 && (
+      <section id="latest-essays" class="section">
+        <div class="section__head">
+          <h2 class="section__title">Latest essays</h2>
+        </div>
+        <div class="essays">
+          {recent.map((essay) => <EssayCard essay={essay} />)}
+        </div>
+      </section>
+    )}
+
+    <section id="archived-posts" class="section">
+      <div class="section__head">
+        <h2 class="section__title">Archived posts</h2>
+      </div>
+      {essays.length > 0 ? (
+        <div class="archive">
+          {years.map((year) => (
+            <div class="archive-year">
+              <h3 class="archive-year-heading">{year}</h3>
+              <ul class="archive-list">
+                {groups.get(year)!.map((essay) => (
+                  <li class="archive-row" data-category={essay.data.category}>
+                    <span class="archive-row__date meta">[{mmdd(essay.data.date)}]</span>
+                    <a class="archive-row__title" href={`/essays/${essay.slug}/`}>
+                      {essay.data.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p class="meta">No published essays yet.</p>
+      )}
+    </section>
+  </div>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('.archive-root');
+      if (!root) return;
+      const buttons = root.querySelectorAll('[data-filter]');
+      const items = root.querySelectorAll('[data-category]');
+      const yearGroups = root.querySelectorAll('.archive-year');
+      const latestSection = root.querySelector('#latest-essays');
+      const favoritesSection = root.querySelector('#favorites');
+
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const f = btn.getAttribute('data-filter');
+          const isAll = f === 'all';
+
+          buttons.forEach((b) => b.classList.toggle('is-active', b === btn));
+
+          // Latest and Favorites are curation/recency cuts, not category cuts.
+          // Hide them when a specific category is selected; the user is doing
+          // a focused dive on that category.
+          if (latestSection) {
+            latestSection.classList.toggle('is-hidden', !isAll);
+          }
+          if (favoritesSection) {
+            favoritesSection.classList.toggle('is-hidden', !isAll);
+          }
+
+          // Filter the archived rows by category.
+          items.forEach((el) => {
+            const matches = isAll || el.getAttribute('data-category') === f;
+            el.classList.toggle('is-hidden', !matches);
+          });
+
+          // Hide year headings that no longer have any visible rows.
+          yearGroups.forEach((yr) => {
+            const visible = yr.querySelector('[data-category]:not(.is-hidden)');
+            yr.classList.toggle('is-hidden', !visible);
+          });
+        });
+      });
+    })();
+  </script>
 </BaseLayout>

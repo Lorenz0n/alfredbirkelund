@@ -1,0 +1,19 @@
+---
+title: "Test Series 2 — Part II: Conclusion"
+subtitle: "The closing chapter — also unlisted."
+date: 2026-04-26
+category: economics
+favorite: false
+draft: true
+unlisted: true
+series: "test-series-2"
+seriesTitle: "Test Series 2"
+part: 2
+partTitle: "II. Conclusion"
+---
+
+The closing page of Test Series 2. Like the previous page, it carries `unlisted: true`. The pager below shows only a "Previous" link, since this is the final part.
+
+If you want to extend the series, drop a new file `03-something.mdx` in `src/content/essays/test-series-2/` with the same `series: "test-series-2"`, set `part: 3`, and — crucially — `unlisted: true` if you want it kept off the archive. The sidebar and pager will pick it up on the next build.
+
+To convert this pattern back to the **listed** style (every part visible in the archive, like `test-series`), simply remove the `unlisted: true` line from the inner parts. Nothing else needs to change.

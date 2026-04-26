@@ -1,35 +1,95 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Canopy from '~/components/Canopy.astro';
+import SeriesNav from '~/components/SeriesNav.astro';
+import TableOfContents from '~/components/TableOfContents.astro';
+import { readingMinutes } from '~/lib/reading-time';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
 
 interface Props {
   essay: CollectionEntry<'essays'>;
+  headings: Heading[];
 }
 
-const { essay } = Astro.props;
-const { title, subtitle, date, category } = essay.data;
+const { essay, headings } = Astro.props;
+const { title, subtitle, date, category, series, toc } = essay.data;
 
 const formatted = date.toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+
+const minutes = readingMinutes(essay.body);
+
+let prevPart: CollectionEntry<'essays'> | null = null;
+let nextPart: CollectionEntry<'essays'> | null = null;
+if (series) {
+  const all = await getCollection('essays', ({ data }) => data.series === series && !data.draft);
+  all.sort((a, b) => (a.data.part ?? 0) - (b.data.part ?? 0));
+  const idx = all.findIndex((e) => e.slug === essay.slug);
+  prevPart = idx > 0 ? all[idx - 1] : null;
+  nextPart = idx >= 0 && idx < all.length - 1 ? all[idx + 1] : null;
+}
+
+const showAside = !!series || toc;
 ---
 <BaseLayout title={`${title} — Alfred Birkelund`} description={subtitle}>
-  <article class="essay reading">
-    <header class="essay__header">
-      <span class="essay__category smallcaps">{category}</span>
-      <h1 class="essay__title">{title}</h1>
-      {subtitle && <p class="essay__subtitle">{subtitle}</p>}
-      <time class="essay__date meta" datetime={date.toISOString()}>{formatted}</time>
-    </header>
+  <Canopy />
+  <article class={showAside ? 'essay essay--with-aside' : 'essay reading'}>
+    {showAside && (
+      <aside class="essay__aside">
+        {series && <SeriesNav series={series} current={essay.slug} />}
+        {toc && <TableOfContents headings={headings} />}
+      </aside>
+    )}
 
-    <div class="essay__body">
-      <slot />
+    <div class="essay__main">
+      <header class="essay__header">
+        <span class="essay__category smallcaps">{category}</span>
+        <h1 class="essay__title">{title}</h1>
+        {subtitle && <p class="essay__subtitle">{subtitle}</p>}
+        <p class="essay__date meta">
+          <time datetime={date.toISOString()}>{formatted}</time>
+          <span class="essay__sep">·</span>
+          <span>{minutes} min read</span>
+          <span class="essay__print">
+            <span class="essay__sep">·</span>
+            <button type="button" class="essay__print-btn" onclick="window.print()">Save as PDF</button>
+          </span>
+        </p>
+      </header>
+
+      <div class="essay__body">
+        <slot />
+      </div>
+
+      {(prevPart || nextPart) && (
+        <nav class="essay__pager" aria-label="Series navigation">
+          {prevPart ? (
+            <a class="essay__pager-link essay__pager-link--prev" href={`/essays/${prevPart.slug}/`}>
+              <span class="essay__pager-dir smallcaps">← Previous</span>
+              <span class="essay__pager-title">{prevPart.data.partTitle ?? prevPart.data.title}</span>
+            </a>
+          ) : <span />}
+          {nextPart ? (
+            <a class="essay__pager-link essay__pager-link--next" href={`/essays/${nextPart.slug}/`}>
+              <span class="essay__pager-dir smallcaps">Next →</span>
+              <span class="essay__pager-title">{nextPart.data.partTitle ?? nextPart.data.title}</span>
+            </a>
+          ) : <span />}
+        </nav>
+      )}
+
+      <footer class="essay__footer">
+        <a href="/archive">← Back to archive</a>
+      </footer>
     </div>
-
-    <footer class="essay__footer">
-      <a href="/archive">← Back to archive</a>
-    </footer>
   </article>
 </BaseLayout>

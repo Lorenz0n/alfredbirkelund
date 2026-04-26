@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 220" role="img" aria-label="Schematic timeline">
+  <rect width="600" height="220" fill="#f3ebda"/>
+
+  <!-- Timeline line -->
+  <line x1="60" y1="120" x2="540" y2="120" stroke="#1a1a1a" stroke-width="1.4"/>
+
+  <!-- Markers -->
+  <circle cx="100" cy="120" r="6" fill="#5b4a2c"/>
+  <circle cx="300" cy="120" r="6" fill="#5b4a2c"/>
+  <circle cx="500" cy="120" r="6" fill="#5b4a2c"/>
+
+  <!-- Marker labels above -->
+  <text x="100" y="95" font-family="EB Garamond, serif" font-size="14" text-anchor="middle" fill="#1a1a1a">t₀</text>
+  <text x="300" y="95" font-family="EB Garamond, serif" font-size="14" text-anchor="middle" fill="#1a1a1a">t₁</text>
+  <text x="500" y="95" font-family="EB Garamond, serif" font-size="14" text-anchor="middle" fill="#1a1a1a">t₂</text>
+
+  <!-- Marker labels below -->
+  <text x="100" y="155" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="#7a7266">software</text>
+  <text x="300" y="155" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="#7a7266">peak Baumol</text>
+  <text x="500" y="155" font-family="Inter, sans-serif" font-size="12" text-anchor="middle" fill="#7a7266">robotics</text>
+
+  <!-- Title -->
+  <text x="300" y="40" font-family="EB Garamond, serif" font-size="15" text-anchor="middle" fill="#1a1a1a" font-style="italic">A schematic timeline — placeholder</text>
+
+  <!-- Bottom note -->
+  <text x="300" y="200" font-family="Inter, sans-serif" font-size="11" text-anchor="middle" fill="#7a7266">Replace with the real chart when ready.</text>
+</svg>

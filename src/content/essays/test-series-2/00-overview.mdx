@@ -1,0 +1,34 @@
+---
+title: "Test Series 2: A Single Archive Entry"
+subtitle: "A multi-page essay that appears once in the archive — Leopold's pattern."
+date: 2026-04-26
+category: economics
+favorite: false
+draft: true
+series: "test-series-2"
+seriesTitle: "Test Series 2"
+part: 0
+partTitle: "Overview"
+---
+
+import Pullquote from '~/components/Pullquote.astro';
+
+<span class="dropcap">T</span>his is the second test series, and it demonstrates a different archival pattern from `test-series`. Look at the `/archive` page: this overview is listed once, but the inner parts are not. The reader discovers them by clicking through — first into this overview, then via the sidebar on the left or the **Next →** link at the bottom of each page.
+
+This is how Leopold Aschenbrenner structures *Situational Awareness* on his site: a single entry, several pages of reading.
+
+<Pullquote>
+The archive shows you the door. The essay shows you the rooms.
+</Pullquote>
+
+## How it works
+
+Every part of the series carries `series: "test-series-2"` in its frontmatter — that's what wires up the sidebar and pager. The two inner parts also carry one extra flag:
+
+```yaml
+unlisted: true
+```
+
+That flag means: still build a URL for this page, still include it in the series sidebar, but don't list it in the archive or on the home page. The overview (this page) does **not** have `unlisted: true`, so it appears in the archive on its own.
+
+When you start the next page using the link below, you'll see the sidebar carry over and the pager swap to point further along.

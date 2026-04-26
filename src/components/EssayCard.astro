@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { readingMinutes } from '~/lib/reading-time';
 
 interface Props {
   essay: CollectionEntry<'essays'>;
@@ -14,9 +15,15 @@ const formatted = date.toLocaleDateString('en-US', {
   month: 'long',
   day: 'numeric',
 });
+
+const minutes = readingMinutes(essay.body);
 ---
-<a class="essay-card" href={`/essays/${essay.slug}/`}>
-  {showDate && <span class="essay-card__date meta">{formatted}</span>}
+<a class="essay-card" href={`/essays/${essay.slug}/`} data-category={essay.data.category}>
+  {showDate && (
+    <span class="essay-card__date meta">
+      {formatted}<span class="essay-card__sep"> · </span>{minutes} min read
+    </span>
+  )}
   <div class="essay-card__title">{title}</div>
   {subtitle && <div class="essay-card__subtitle">{subtitle}</div>}
 </a>
