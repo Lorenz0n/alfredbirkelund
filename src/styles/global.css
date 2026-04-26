@@ -617,6 +617,34 @@ img, svg { max-width: 100%; height: auto; display: block; }
 .series-nav__item.is-current a { color: var(--color-ink); }
 .series-nav__item.is-current .series-nav__num { color: var(--color-accent); }
 
+.series-nav__actions {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-rule);
+}
+
+/* Aggregate series page (screen styles) */
+.series-print-part {
+  margin-top: 3em;
+}
+.series-print-part:first-child { margin-top: 0; }
+.series-print-part__title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0 0 1em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid var(--color-rule);
+}
+.series-nav__print-link {
+  color: var(--color-muted);
+  border-bottom: none;
+  font-style: italic;
+  transition: color var(--ease);
+}
+.series-nav__print-link:hover { color: var(--color-accent); }
+
 /* ---------- Table of contents ---------- */
 .toc { margin-top: 1.5rem; }
 .series-nav + .toc {
@@ -991,11 +1019,59 @@ a[href^="https://"]:hover {
   .essay__body blockquote,
   .essay__body .detail { page-break-inside: avoid; break-inside: avoid; }
   .essay__body [data-footnotes] { page-break-before: auto; break-before: auto; font-size: 10pt; }
-  .essay__body .detail .detail__summary { display: none; }
+  /* <details> elements: forced open by JS before print, then styled here.
+     Show summary as an italic intro label and body normally — replaces the
+     web-only collapsed UI with something printable. */
+  .essay__body .detail {
+    border: 1px solid #999 !important;
+    background: transparent !important;
+    margin: 1.25em 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+  .essay__body .detail[open] > *:not(summary),
+  .essay__body .detail > *:not(summary) {
+    display: block !important;
+  }
+  .essay__body .detail .detail__summary {
+    display: block !important;
+    cursor: default;
+    padding: 0.5em 0.85em !important;
+    font-family: inherit !important;
+    font-size: 0.95em !important;
+    font-style: italic;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    color: #555 !important;
+    font-weight: 400 !important;
+  }
+  .essay__body .detail .detail__summary::after {
+    content: '' !important;
+    display: none !important;
+  }
   .essay__body .detail .detail__body {
-    border: 0;
-    padding: 0;
-    margin: 1em 0;
+    border-top: 1px solid #ccc !important;
+    padding: 0.75em 0.85em !important;
+    margin: 0 !important;
+  }
+
+  /* Aggregate series print page: each part starts on a fresh page. */
+  .series-print-part {
+    page-break-before: always;
+    break-before: always;
+  }
+  .series-print-part:first-child {
+    page-break-before: auto;
+    break-before: auto;
+  }
+  .series-print-part__title {
+    font-family: var(--font-serif);
+    font-size: 18pt;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 0.4em 0 0.8em;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid #999;
   }
 
   .meta, .smallcaps { color: #555; }

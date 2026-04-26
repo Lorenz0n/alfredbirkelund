@@ -60,19 +60,27 @@ const ogImageUrl = new URL(ogImage, Astro.site).toString();
     <Footer />
 
     <script is:inline>
-      // Clean print: clear document.title briefly before window.print() so
-      // the browser-injected page header doesn't repeat the title that's
-      // already shown in the body. Restored after the print dialog closes.
-      // Triggered by any button with data-print-clean.
+      // Clean print: before window.print(), (1) clear document.title so the
+      // browser-injected page header doesn't repeat the body title, and
+      // (2) force every <details> element open so collapsible explainers
+      // print with their content visible. Both restored after the dialog
+      // closes. Triggered by any button with data-print-clean.
       document.addEventListener('click', (e) => {
         const btn = e.target.closest('[data-print-clean]');
         if (!btn) return;
         e.preventDefault();
-        const original = document.title;
+
+        const originalTitle = document.title;
         document.title = '';
+
+        const allDetails = document.querySelectorAll('details');
+        const wasOpen = Array.from(allDetails, (d) => d.open);
+        allDetails.forEach((d) => { d.open = true; });
+
         setTimeout(() => {
           window.print();
-          document.title = original;
+          document.title = originalTitle;
+          allDetails.forEach((d, i) => { d.open = wasOpen[i]; });
         }, 50);
       });
     </script>

@@ -1,0 +1,75 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Canopy from '../../../components/Canopy.astro';
+
+export async function getStaticPaths() {
+  const all = await getCollection('essays', ({ data }) => !data.draft && !!data.series);
+  const seriesNames = [...new Set(all.map((e) => e.data.series!))];
+  return seriesNames.map((series) => ({ params: { series } }));
+}
+
+const { series } = Astro.params;
+
+const parts = await getCollection(
+  'essays',
+  ({ data }) => !data.draft && data.series === series,
+);
+parts.sort((a, b) => (a.data.part ?? 0) - (b.data.part ?? 0));
+
+const seriesTitle =
+  parts.find((p) => p.data.seriesTitle)?.data.seriesTitle ?? series ?? '';
+
+const rendered = await Promise.all(
+  parts.map(async (p) => ({
+    data: p.data,
+    Content: (await p.render()).Content,
+  })),
+);
+
+const earliestDate = parts.reduce(
+  (acc, p) => (p.data.date < acc ? p.data.date : acc),
+  parts[0].data.date,
+);
+
+const formatted = earliestDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+<BaseLayout
+  title={`${seriesTitle} — Alfred Birkelund`}
+  description={`Full series — all ${parts.length} parts.`}
+>
+  <Canopy />
+  <article class="essay reading">
+    <header class="essay__header">
+      <span class="essay__category smallcaps">{parts[0].data.category}</span>
+      <h1 class="essay__title">{seriesTitle}</h1>
+      <p class="essay__subtitle">Full series — all parts in one document.</p>
+      <p class="essay__date meta">
+        <time datetime={earliestDate.toISOString()}>{formatted}</time>
+        <span class="essay__sep">·</span>
+        <span>{parts.length} parts</span>
+        <span class="essay__print">
+          <span class="essay__sep">·</span>
+          <button type="button" class="essay__print-btn" data-print-clean>Save as PDF</button>
+        </span>
+      </p>
+    </header>
+
+    <div class="essay__body">
+      {rendered.map(({ data, Content }) => (
+        <section class="series-print-part">
+          <h2 class="series-print-part__title">{data.partTitle ?? data.title}</h2>
+          <Content />
+        </section>
+      ))}
+    </div>
+
+    <footer class="essay__footer">
+      <a href={`/essays/${parts[0].slug}/`}>← Back to {seriesTitle}</a>
+    </footer>
+  </article>
+</BaseLayout>

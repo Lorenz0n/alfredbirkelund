@@ -2,16 +2,23 @@
 // to a single email address you specify. Doesn't touch the Resend audience
 // and doesn't update scripts/last-broadcast.json — pure preview.
 //
+// Reads the essay's frontmatter directly from src/content/essays/<slug>.mdx,
+// so it works for unlisted essays too (which aren't in the RSS feed).
+//
 // Required env:
-//   RESEND_API_KEY  — server-side API key (use a fresh one if you don't have
-//                     one saved locally; revoke when done if you want)
+//   RESEND_API_KEY  — server-side API key
 //   RESEND_FROM     — e.g. 'Alfred Birkelund <newsletter@alfredbirkelund.com>'
 //   SITE_URL        — optional; defaults to https://alfredbirkelund.com
 //
 // Usage:
-//   npm run build         # makes sure dist/rss.xml is up to date
+//   npm run build
 //   RESEND_API_KEY=re_xxx RESEND_FROM='Alfred <newsletter@alfredbirkelund.com>' \
-//     node scripts/preview-broadcast.mjs hello-world you@example.com
+//     node scripts/preview-broadcast.mjs <slug> <to-email>
+//
+// Examples:
+//   ... preview-broadcast.mjs hello-world you@example.com
+//   ... preview-broadcast.mjs test-headings you@example.com
+//   ... preview-broadcast.mjs test-series/00-overview you@example.com
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -20,7 +27,7 @@ import { buildEssayEmail } from './lib/build-essay-email.mjs';
 const [, , slug, toEmail] = process.argv;
 if (!slug || !toEmail) {
   console.error('Usage: node scripts/preview-broadcast.mjs <slug> <to-email>');
-  console.error('Example: node scripts/preview-broadcast.mjs hello-world you@example.com');
+  console.error('Example: node scripts/preview-broadcast.mjs test-headings you@example.com');
   process.exit(1);
 }
 
@@ -32,61 +39,44 @@ if (!apiKey || !from) {
   process.exit(1);
 }
 
-const RSS_PATH = path.resolve('dist/rss.xml');
-if (!fs.existsSync(RSS_PATH)) {
-  console.error(`RSS feed not found at ${RSS_PATH}. Run \`npm run build\` first.`);
+const mdxPath = path.resolve(`src/content/essays/${slug}.mdx`);
+if (!fs.existsSync(mdxPath)) {
+  console.error(`Essay not found: ${mdxPath}`);
   process.exit(1);
 }
 
-const rss = fs.readFileSync(RSS_PATH, 'utf8');
-
-function decodeEntities(s) {
-  return s
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'")
-    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)));
-}
-
-function extractTag(block, tag) {
-  const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`));
-  if (!m) return '';
-  return decodeEntities(
-    m[1].trim().replace(/^<!\[CDATA\[/, '').replace(/\]\]>$/, ''),
-  );
-}
-
-function slugFromLink(link) {
-  const m = link.match(/\/essays\/(.+?)\/?$/);
-  return m ? m[1] : null;
-}
-
-const blocks = [...rss.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
-const matched = blocks.find(
-  (b) => slugFromLink(extractTag(b, 'link')) === slug,
-);
-
-if (!matched) {
-  console.error(`No RSS item with slug "${slug}". Available essays:`);
-  for (const b of blocks) {
-    const s = slugFromLink(extractTag(b, 'link'));
-    if (s) console.error(`  - ${s}`);
+function parseFrontmatter(raw) {
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!m) return {};
+  const fm = {};
+  for (const line of m[1].split('\n')) {
+    const km = line.match(/^(\w+):\s*(.*)$/);
+    if (!km) continue;
+    let val = km[2].trim();
+    val = val.replace(/^["'](.*)["']$/, '$1');
+    if (val === 'true') val = true;
+    else if (val === 'false') val = false;
+    fm[km[1]] = val;
   }
+  return fm;
+}
+
+const raw = fs.readFileSync(mdxPath, 'utf8');
+const fm = parseFrontmatter(raw);
+if (!fm.title || !fm.date) {
+  console.error(`Frontmatter missing required fields (title, date) in ${mdxPath}`);
   process.exit(1);
 }
 
-const item = {
+const html = buildEssayEmail({
   slug,
-  title: extractTag(matched, 'title'),
-  subtitle: extractTag(matched, 'description'),
-  link: extractTag(matched, 'link'),
-  date: extractTag(matched, 'pubDate'),
-  category: extractTag(matched, 'category'),
-};
-
-const html = buildEssayEmail({ ...item, siteUrl });
+  title: fm.title,
+  subtitle: fm.subtitle ?? '',
+  link: `${siteUrl}/essays/${slug}/`,
+  date: fm.date,
+  category: fm.category ?? '',
+  siteUrl,
+});
 
 const res = await fetch('https://api.resend.com/emails', {
   method: 'POST',
@@ -97,7 +87,7 @@ const res = await fetch('https://api.resend.com/emails', {
   body: JSON.stringify({
     from,
     to: [toEmail],
-    subject: `[PREVIEW] ${item.title}`,
+    subject: `[PREVIEW] ${fm.title}`,
     html,
   }),
 });
