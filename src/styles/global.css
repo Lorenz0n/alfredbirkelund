@@ -330,6 +330,11 @@ img, svg { max-width: 100%; height: auto; display: block; }
   font-style: italic;
   color: var(--color-muted);
 }
+/* Turnstile widget — give it a dedicated row below the form line. */
+.intro__subscribe-turnstile {
+  flex-basis: 100%;
+  margin-top: 0.5rem;
+}
 
 /* ---------- About section ---------- */
 .about {

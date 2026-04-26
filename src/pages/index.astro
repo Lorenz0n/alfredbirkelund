@@ -53,8 +53,22 @@ const favorites = allEssays.filter((e) => e.data.favorite);
         aria-hidden="true"
         style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0;"
       />
+      <!-- Cloudflare Turnstile: bot-check widget. Inserts a hidden
+           cf-turnstile-response field into the form when ready. -->
+      <div
+        class="cf-turnstile intro__subscribe-turnstile"
+        data-sitekey="0x4AAAAAADD6s053Jp2LmuHv"
+        data-size="flexible"
+        data-theme="light"
+      ></div>
     </form>
   </section>
+
+  <script
+    src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+    async
+    defer
+  ></script>
 
   <script is:inline>
     (() => {

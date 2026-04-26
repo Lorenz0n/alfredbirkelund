@@ -75,7 +75,7 @@ You only do these steps once. After that, publishing is `git push`.
 
 You need a free Cloudflare account (https://dash.cloudflare.com/sign-up).
 
-The Worker needs **four** secrets:
+The Worker needs **five** secrets:
 
 | Secret | What it is |
 |---|---|
@@ -83,6 +83,7 @@ The Worker needs **four** secrets:
 | `RESEND_AUDIENCE_ID` | Audience UUID from step 1.2 |
 | `RESEND_FROM` | Same as the GitHub Actions secret, e.g. `Alfred Birkelund <newsletter@alfredbirkelund.com>` — used as the sender for confirmation emails |
 | `CONFIRM_SECRET` | Random 32+ character string. Used to HMAC-sign confirmation tokens so they can't be forged. Generate with `openssl rand -hex 32` (or any password manager). Keep it somewhere safe — if it ever leaks, rotate by setting a new value via `wrangler secret put`; previously-issued tokens then stop working. |
+| `TURNSTILE_SECRET` | Cloudflare Turnstile secret key. Generate at https://dash.cloudflare.com → Turnstile → your site → "Settings" tab. The site key (public, goes in the form HTML) is separate from the secret. |
 
 ```bash
 cd worker
@@ -92,6 +93,7 @@ npx wrangler secret put RESEND_API_KEY        # paste the key from step 1.3
 npx wrangler secret put RESEND_AUDIENCE_ID    # paste the UUID from step 1.2
 npx wrangler secret put RESEND_FROM           # paste the same from address as in step 3
 npx wrangler secret put CONFIRM_SECRET        # paste a random 32+ char string
+npx wrangler secret put TURNSTILE_SECRET      # paste Turnstile secret from Cloudflare dashboard
 npx wrangler deploy
 ```
 

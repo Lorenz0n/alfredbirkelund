@@ -1,11 +1,13 @@
 // Subscribe + double-opt-in for alfredbirkelund.com.
 //
 // Flow:
-//   1. Form on alfredbirkelund.com POSTs { email } here.
-//   2. Worker validates the email + honeypot, generates an HMAC-signed token
-//      that contains the email and a timestamp, and sends a confirmation
-//      email via Resend's transactional /emails endpoint. The token is the
-//      only state — nothing is written to the Resend audience yet.
+//   1. Form on alfredbirkelund.com POSTs { email, cf-turnstile-response } here.
+//   2. Worker verifies the Turnstile token with Cloudflare's siteverify
+//      endpoint, then validates the email + honeypot, generates an HMAC-
+//      signed token containing the email and a timestamp, and sends a
+//      confirmation email via Resend's transactional /emails endpoint. The
+//      HMAC token is the only state — nothing is written to the Resend
+//      audience yet.
 //   3. The user clicks the confirmation link, which lands on GET /confirm.
 //      Worker verifies the HMAC + that the token is younger than 7 days,
 //      then adds the contact to the Resend audience.
@@ -15,6 +17,7 @@
 //   RESEND_AUDIENCE_ID  — UUID of the audience created in resend.com/audiences
 //   RESEND_FROM         — e.g. 'Alfred Birkelund <newsletter@alfredbirkelund.com>'
 //   CONFIRM_SECRET      — any random 32+ char string used to sign tokens
+//   TURNSTILE_SECRET    — Cloudflare Turnstile secret key (bot protection)
 
 const ALLOWED_ORIGINS = new Set([
   'https://alfredbirkelund.com',
@@ -204,7 +207,7 @@ export default {
       return new Response(null, { headers: cors });
     }
 
-    if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID || !env.RESEND_FROM || !env.CONFIRM_SECRET) {
+    if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID || !env.RESEND_FROM || !env.CONFIRM_SECRET || !env.TURNSTILE_SECRET) {
       console.error('Missing required Worker secret(s)');
       return json({ error: 'Server misconfigured' }, { status: 500 }, cors);
     }
@@ -248,16 +251,19 @@ export default {
     if (request.method === 'POST') {
       let email = '';
       let honeypot = '';
+      let turnstileToken = '';
       try {
         const ct = request.headers.get('Content-Type') ?? '';
         if (ct.includes('application/json')) {
           const body = await request.json();
           email = body.email ?? '';
           honeypot = body.website ?? '';
+          turnstileToken = body['cf-turnstile-response'] ?? '';
         } else {
           const fd = await request.formData();
           email = (fd.get('email') ?? '').toString();
           honeypot = (fd.get('website') ?? '').toString();
+          turnstileToken = (fd.get('cf-turnstile-response') ?? '').toString();
         }
       } catch (_) {
         return json({ error: 'Invalid request body' }, { status: 400 }, cors);
@@ -266,6 +272,30 @@ export default {
       // Honeypot: silently accept so the bot doesn't learn it was caught.
       if (honeypot.trim() !== '') {
         return json({ ok: true }, {}, cors);
+      }
+
+      // Turnstile: verify the bot-check token with Cloudflare. Blocks
+      // direct POSTs from curl/scripts that bypass the form.
+      if (!turnstileToken) {
+        return json({ error: 'Bot check missing' }, { status: 400 }, cors);
+      }
+      const ip = request.headers.get('CF-Connecting-IP') ?? '';
+      const verifyRes = await fetch(
+        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            secret: env.TURNSTILE_SECRET,
+            response: turnstileToken,
+            remoteip: ip,
+          }),
+        },
+      );
+      const verifyData = await verifyRes.json().catch(() => ({}));
+      if (!verifyData.success) {
+        console.error('Turnstile verify failed:', verifyData['error-codes']);
+        return json({ error: 'Bot check failed' }, { status: 400 }, cors);
       }
 
       if (!isValidEmail(email)) {
