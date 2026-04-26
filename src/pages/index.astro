@@ -72,7 +72,7 @@ const favorites = allEssays.filter((e) => e.data.favorite);
         try {
           const res = await fetch(form.action, { method: 'POST', body: fd });
           if (res.ok) {
-            showMessage('Almost there — check your inbox to confirm.');
+            showMessage('Almost there — check your inbox to confirm. The first one often lands in spam.');
           } else {
             showMessage('Something went wrong. Try again later, or email me directly.');
           }
@@ -117,12 +117,6 @@ const favorites = allEssays.filter((e) => e.data.favorite);
     <h2>About</h2>
     <p>
       I'm finishing a BSc in Economics at the University of Southern Denmark.
-    </p>
-    <p>
-      The usual way to read a decision is to follow the money, and most of
-      the time it works. But if AI is a shift on the scale of the industrial
-      revolution — and I think it is — capital will have rivals: security,
-      data, and political ambition.
     </p>
     <p>
       Alongside my studies I'm building
