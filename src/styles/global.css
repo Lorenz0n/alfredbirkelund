@@ -41,6 +41,8 @@ html {
   background: var(--color-bg);
   color: var(--color-ink);
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 1.5rem;
 }
 
 body {
