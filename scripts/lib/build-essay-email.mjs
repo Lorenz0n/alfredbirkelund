@@ -12,6 +12,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { marked } from 'marked';
+import markedFootnote from 'marked-footnote';
+
+// Enable GFM-style footnotes ([^1] in prose, [^1]: at the bottom). Generates
+// <sup class="footnote-ref"><a>...</a></sup> in prose and a
+// <section class="footnotes"> with <ol> and back-references at the end.
+marked.use(markedFootnote());
 
 // Site palette — must match src/styles/global.css design tokens.
 const C = {
@@ -128,7 +134,42 @@ ${cite ? `<cite style="display:block;margin-top:0.6em;font-style:normal;font-fam
 // Add inline styles to common tags. Skips tags that already carry a `style=`
 // (i.e. ones our component transforms produced — they're already styled).
 function inlineStyles(html, siteUrl) {
-  // Generic tags from STYLES_BY_TAG.
+  // ----- Pass 1: footnote-specific styling (must run BEFORE generic styling
+  //   so that the elements we touch already carry style and are skipped by
+  //   the generic loop below).
+  //
+  // marked-footnote output:
+  //   prose:   <sup><a data-footnote-ref id="..." href="#footnote-N">N</a></sup>
+  //   section: <section data-footnotes class="footnotes">...<ol>...</ol></section>
+  //   back:    <a data-footnote-backref href="#footnote-ref-N">↩</a>
+
+  // Hide the auto-generated "Footnotes" h2 visually (the top rule already
+  // separates the section); keep it accessible to screen readers. Match by
+  // the unique id="footnote-label" the plugin always emits.
+  html = html.replace(/<h2([^>]*\sid="footnote-label"[^>]*)>Footnotes<\/h2>/i,
+    `<h2$1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">Footnotes</h2>`,
+  );
+
+  // Style the footnotes <section>.
+  html = html.replace(/(<section\b[^>]*?\sdata-footnotes[^>]*)>/,
+    `$1 style="margin-top:3em;padding-top:1.5em;border-top:1px solid ${C.rule};font-size:14px;color:${C.ink};">`,
+  );
+
+  // Wrap prose <sup> (only those with a data-footnote-ref child) in
+  // small-superscript styling.
+  html = html.replace(/<sup>(\s*<a[^>]*\sdata-footnote-ref[\s\S]*?<\/a>\s*)<\/sup>/g,
+    `<sup style="font-size:0.75em;line-height:0;vertical-align:super;">$1</sup>`,
+  );
+
+  // Style footnote ref + backref anchors directly (no underline).
+  html = html.replace(/<a([^>]*\sdata-footnote-ref[^>]*)>/g,
+    `<a$1 style="color:${C.accent};text-decoration:none;">`,
+  );
+  html = html.replace(/<a([^>]*\sdata-footnote-backref[^>]*)>/g,
+    `<a$1 style="color:${C.muted};text-decoration:none;font-size:0.9em;margin-left:0.3em;">`,
+  );
+
+  // ----- Pass 2: generic tag styling. Skips any tag that already has style.
   for (const [tag, style] of Object.entries(STYLES_BY_TAG)) {
     const re = new RegExp(`<${tag}\\b([^>]*?)>`, 'gi');
     html = html.replace(re, (m, attrs) => {
@@ -137,6 +178,7 @@ function inlineStyles(html, siteUrl) {
     });
   }
 
+  // ----- Pass 3: generic links + images.
   // Links: pick colour by internal/external; rewrite paths to absolute.
   html = html.replace(/<a\b([^>]*?)href="([^"]*)"([^>]*?)>/g, (m, before, href, after) => {
     if (/\sstyle\s*=/.test(before + after)) return m;
@@ -153,8 +195,7 @@ function inlineStyles(html, siteUrl) {
     return `<img${before}src="${abs}"${after} style="max-width:100%;height:auto;display:block;margin:1.5em auto;border:1px solid ${C.rule};border-radius:3px;">`;
   });
 
-  // <strong>, <em> — leave alone (browsers + email clients render these
-  // sensibly; styling them would just add noise).
+  // <strong>, <em> — leave alone.
 
   return html;
 }

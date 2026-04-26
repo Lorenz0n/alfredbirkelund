@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
-    "marked": "^18.0.2"
+    "marked": "^18.0.2",
+    "marked-footnote": "^1.4.0"
   }
 }
