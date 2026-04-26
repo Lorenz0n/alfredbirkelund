@@ -11,7 +11,8 @@
     "astro": "astro",
     "check": "astro check",
     "build:og": "node scripts/build-og-image.mjs",
-    "build:favicon": "node scripts/build-favicon-png.mjs"
+    "build:favicon": "node scripts/build-favicon-png.mjs",
+    "preview:broadcast": "node scripts/preview-broadcast.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
