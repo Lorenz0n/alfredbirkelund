@@ -213,9 +213,9 @@ export function buildEssayEmail({ slug, title, subtitle, link, date, category, s
                 <a href="${linkAbs}" style="color:${C.ink};text-decoration:none;">${titleH}</a>
               </h1>
               ${subtitleH ? `<p style="font-style:italic;font-size:18px;color:${C.muted};line-height:1.4;margin:0 0 24px;">${subtitleH}</p>` : ''}
-              <p style="font-family:${FONT_SERIF};font-size:15px;margin:0 0 32px;">
-                <a href="${linkAbs}" style="color:${C.accent};text-decoration:underline;">Read this on the site →</a>
-                <span style="color:${C.muted};font-style:italic;"> for a better reading experience.</span>
+              <p style="font-family:${FONT_SERIF};font-size:15px;margin:0 0 32px;line-height:1.6;">
+                <a href="${linkAbs}" style="color:${C.accent};text-decoration:underline;">Read this on the site →</a><br />
+                <span style="color:${C.muted};font-style:italic;font-size:14px;">For a better reading experience.</span>
               </p>
               <hr style="border:0;border-top:1px solid ${C.rule};margin:0 0 32px;" />
               <div style="font-size:17px;line-height:1.65;color:${C.ink};">
