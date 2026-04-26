@@ -212,15 +212,16 @@ export function buildEssayEmail({ slug, title, subtitle, link, date, category, s
               <h1 style="font-family:${FONT_SERIF};font-size:32px;font-weight:500;line-height:1.15;margin:0 0 12px;color:${C.ink};">
                 <a href="${linkAbs}" style="color:${C.ink};text-decoration:none;">${titleH}</a>
               </h1>
-              ${subtitleH ? `<p style="font-style:italic;font-size:18px;color:${C.muted};line-height:1.4;margin:0 0 32px;">${subtitleH}</p>` : ''}
-              <hr style="border:0;border-top:1px solid ${C.rule};margin:24px 0 32px;" />
+              ${subtitleH ? `<p style="font-style:italic;font-size:18px;color:${C.muted};line-height:1.4;margin:0 0 24px;">${subtitleH}</p>` : ''}
+              <p style="font-family:${FONT_SERIF};font-size:15px;margin:0 0 32px;">
+                <a href="${linkAbs}" style="color:${C.accent};text-decoration:underline;">Read this on the site →</a>
+                <span style="color:${C.muted};font-style:italic;"> for a better reading experience.</span>
+              </p>
+              <hr style="border:0;border-top:1px solid ${C.rule};margin:0 0 32px;" />
               <div style="font-size:17px;line-height:1.65;color:${C.ink};">
 ${styled}
               </div>
               <hr style="border:0;border-top:1px solid ${C.rule};margin:48px 0 24px;" />
-              <p style="margin:0 0 16px;font-family:${FONT_SERIF};">
-                <a href="${linkAbs}" style="color:${C.accent};text-decoration:underline;">Read this on the site →</a>
-              </p>
               <p style="font-family:${FONT_SANS};font-size:13px;color:${C.muted};margin:0;line-height:1.5;">
                 You're getting this because you subscribed at
                 <a href="${siteUrl}" style="color:${C.muted};">${siteHost}</a>.
