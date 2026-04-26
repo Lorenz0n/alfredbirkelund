@@ -893,22 +893,42 @@ a[href^="https://"]:hover {
 }
 
 /* ---------- Print ---------- */
+@page {
+  size: A4;
+  margin: 1.8cm;
+}
+
 @media print {
   html, body {
     background: #ffffff;
     color: #000000;
   }
   body {
-    font-size: 10.5pt;
-    line-height: 1.45;
+    font-size: 11pt;
+    line-height: 1.5;
   }
   main { padding: 0; }
+
+  /* Hide site chrome and any inline action affordances. */
   .site-header,
   .site-footer,
   .cv__actions,
-  .essay__print {
+  .essay__print,
+  .canopy,
+  .essay__aside,
+  .essay__pager,
+  .essay__footer,
+  .archive-nav,
+  .filter,
+  .archive,
+  .section--favorites,
+  .section,
+  .intro__subscribe,
+  .intro__subscribe-thanks,
+  hr.print-hide {
     display: none !important;
   }
+
   .reading, .container {
     max-width: none;
     padding: 0;
@@ -917,7 +937,10 @@ a[href^="https://"]:hover {
   a {
     color: #000000;
     border-bottom: none;
+    text-decoration: none;
   }
+
+  /* CV — fits one page; tight layout. */
   .cv { padding: 0; }
   .cv__header {
     padding: 0 0 0.75rem;
@@ -926,10 +949,39 @@ a[href^="https://"]:hover {
   }
   .cv__name { font-size: 20pt; }
   .cv__tagline { font-size: 12pt; }
-  .cv__section { margin-top: 1rem; page-break-inside: avoid; }
+  .cv__section { margin-top: 1rem; page-break-inside: avoid; break-inside: avoid; }
   .cv__section-title { font-size: 14pt; margin-bottom: 0.5rem; }
-  .cv__entry { page-break-inside: avoid; margin-bottom: 0.9rem; }
+  .cv__entry { page-break-inside: avoid; break-inside: avoid; margin-bottom: 0.9rem; }
   .cv__entry-primary { font-size: 11pt; }
+
+  /* Essay — readable body type, sensible heading scale, clean breaks. */
+  .essay { padding: 0; }
+  .essay__header {
+    padding: 0 0 0.75rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid #999;
+  }
+  .essay__title { font-size: 22pt; line-height: 1.15; margin-bottom: 0.3em; }
+  .essay__subtitle { font-size: 13pt; }
+  .essay__category { font-size: 9pt; }
+  .essay__date { font-size: 10pt; margin-top: 0.5rem; }
+  .essay__body { font-size: 11.5pt; line-height: 1.55; }
+  .essay__body h2 { font-size: 16pt; margin: 1.4em 0 0.4em; page-break-after: avoid; break-after: avoid; }
+  .essay__body h3 { font-size: 13pt; margin: 1.2em 0 0.3em; page-break-after: avoid; break-after: avoid; }
+  .essay__body h4 { font-size: 11.5pt; margin: 1em 0 0.3em; page-break-after: avoid; break-after: avoid; }
+  .essay__body p, .essay__body li { orphans: 3; widows: 3; }
+  .essay__body .figure,
+  .essay__body .pullquote,
+  .essay__body blockquote,
+  .essay__body .detail { page-break-inside: avoid; break-inside: avoid; }
+  .essay__body [data-footnotes] { page-break-before: auto; break-before: auto; font-size: 10pt; }
+  .essay__body .detail .detail__summary { display: none; }
+  .essay__body .detail .detail__body {
+    border: 0;
+    padding: 0;
+    margin: 1em 0;
+  }
+
   .meta, .smallcaps { color: #555; }
 }
 

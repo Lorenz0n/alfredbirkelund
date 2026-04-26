@@ -58,5 +58,23 @@ const ogImageUrl = new URL(ogImage, Astro.site).toString();
     <Header />
     <main><slot /></main>
     <Footer />
+
+    <script is:inline>
+      // Clean print: clear document.title briefly before window.print() so
+      // the browser-injected page header doesn't repeat the title that's
+      // already shown in the body. Restored after the print dialog closes.
+      // Triggered by any button with data-print-clean.
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-print-clean]');
+        if (!btn) return;
+        e.preventDefault();
+        const original = document.title;
+        document.title = '';
+        setTimeout(() => {
+          window.print();
+          document.title = original;
+        }, 50);
+      });
+    </script>
   </body>
 </html>

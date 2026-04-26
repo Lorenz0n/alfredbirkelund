@@ -15,6 +15,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { buildEssayEmail } from './lib/build-essay-email.mjs';
 
 const [, , slug, toEmail] = process.argv;
 if (!slug || !toEmail) {
@@ -57,61 +58,35 @@ function extractTag(block, tag) {
   );
 }
 
-function escapeHtml(s) {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+function slugFromLink(link) {
+  const m = link.match(/\/essays\/(.+?)\/?$/);
+  return m ? m[1] : null;
 }
 
 const blocks = [...rss.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
 const matched = blocks.find(
-  (b) =>
-    extractTag(b, 'link').endsWith(`/${slug}/`) ||
-    extractTag(b, 'guid').endsWith(`/${slug}/`),
+  (b) => slugFromLink(extractTag(b, 'link')) === slug,
 );
 
 if (!matched) {
   console.error(`No RSS item with slug "${slug}". Available essays:`);
   for (const b of blocks) {
-    const link = extractTag(b, 'link');
-    const m = link.match(/\/essays\/([^/]+)\/?$/);
-    if (m) console.error(`  - ${m[1]}`);
+    const s = slugFromLink(extractTag(b, 'link'));
+    if (s) console.error(`  - ${s}`);
   }
   process.exit(1);
 }
 
 const item = {
+  slug,
   title: extractTag(matched, 'title'),
-  description: extractTag(matched, 'description'),
+  subtitle: extractTag(matched, 'description'),
   link: extractTag(matched, 'link'),
+  date: extractTag(matched, 'pubDate'),
+  category: extractTag(matched, 'category'),
 };
 
-const title = escapeHtml(item.title);
-const description = item.description ? escapeHtml(item.description) : '';
-const html = `<!doctype html>
-<html lang="en">
-<head><meta charset="utf-8" /><title>${title}</title></head>
-<body style="margin:0;padding:32px 16px;background:#f3ebda;font-family:Georgia,'EB Garamond',serif;color:#1a1a1a;">
-  <div style="max-width:560px;margin:0 auto;line-height:1.6;font-size:17px;">
-    <h2 style="font-size:26px;font-weight:500;margin:0 0 8px;line-height:1.2;">
-      <a href="${item.link}" style="color:#1a1a1a;text-decoration:none;">${title}</a>
-    </h2>
-    ${description ? `<p style="font-style:italic;color:#7a7266;margin:0 0 28px;">${description}</p>` : ''}
-    <p style="margin:0 0 32px;">
-      <a href="${item.link}" style="color:#5b4a2c;text-decoration:underline;">Read on the site →</a>
-    </p>
-    <hr style="border:0;border-top:1px solid #d6cdb6;margin:36px 0 20px;" />
-    <p style="font-size:13px;color:#7a7266;margin:0;">
-      You're getting this because you subscribed at
-      <a href="${siteUrl}" style="color:#7a7266;">${siteUrl.replace(/^https?:\/\//, '')}</a>.
-      Unsubscribe link is added by Resend on real broadcasts.
-    </p>
-  </div>
-</body>
-</html>`;
+const html = buildEssayEmail({ ...item, siteUrl });
 
 const res = await fetch('https://api.resend.com/emails', {
   method: 'POST',
