@@ -15,25 +15,40 @@ import Canopy from '../components/Canopy.astro';
     <div class="essay__body">
       <h2>Privacy</h2>
       <p>
-        No cookies, no analytics, no tracking pixels, no embedded widgets.
-        Fonts are self-hosted, so rendering a page doesn't send any request
-        to Google or a third-party CDN. Reading the site means your browser
-        asks GitHub's servers for HTML, CSS, and fonts — and that's the
-        whole exchange.
+        No cookies set by this site, no analytics, no tracking pixels.
+        Fonts are self-hosted, so rendering a page doesn't send any
+        request to Google or a third-party CDN.
+      </p>
+      <p>Two third parties enter the picture when you use the site:</p>
+      <ul>
+        <li>
+          <strong>Cloudflare Turnstile</strong> — an invisible bot-check
+          on the subscribe form. A small script loads from
+          <code>challenges.cloudflare.com</code> on the home page.
+          Cloudflare states it doesn't use cookies or fingerprint
+          visitors across sites; it analyzes request signals to filter
+          bots. Legal basis: legitimate interest in preventing abuse.
+        </li>
+        <li>
+          <strong>Resend</strong> — if you submit the subscribe form,
+          your email is sent to a small Cloudflare Worker which uses
+          <a href="https://resend.com">Resend</a> to email you a
+          confirmation link. Click the link and your address is stored
+          in a Resend audience until you unsubscribe. Open- and
+          click-tracking are disabled. Legal basis: your consent (the
+          confirmation click).
+        </li>
+      </ul>
+      <p>
+        GitHub, like any web host, keeps short-lived access logs (IP,
+        user agent, request path) for operating the service. I don't
+        have access to those logs.
       </p>
       <p>
-        The one third-party connection is the email subscribe form. If you
-        use it, the form posts to a small Cloudflare Worker, which uses
-        <a href="https://resend.com">Resend</a> to send you a confirmation
-        email and — once you click the link — adds your address to a Resend
-        audience. You stay there until you unsubscribe; every newsletter
-        has an unsubscribe link.
-      </p>
-      <p>
-        GitHub, like any web host, keeps short-lived access logs (IP, user
-        agent, request path) for the purpose of operating the service. I
-        don't have access to those logs, and nothing on this site is
-        designed to identify or profile visitors.
+        I'm the data controller. To unsubscribe, use the link in any
+        newsletter email. To request a copy of the data held about you,
+        or its erasure, email
+        <a href="mailto:alfredbirkelund@gmail.com">alfredbirkelund@gmail.com</a>.
       </p>
 
       <h2>Corrections &amp; contact</h2>
