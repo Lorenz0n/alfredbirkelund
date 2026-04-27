@@ -27,3 +27,6 @@ pnpm-debug.log*
 .vscode/
 .idea/
 
+# private working files (kept local, never pushed to public GitHub)
+src/content/essays/drafts/
+src/content/essay-notes/
