@@ -53,13 +53,13 @@ const favorites = allEssays.filter((e) => e.data.favorite);
         aria-hidden="true"
         style="position:absolute;left:-10000px;width:1px;height:1px;opacity:0;"
       />
-      <!-- Cloudflare Turnstile: bot-check widget. Inserts a hidden
-           cf-turnstile-response field into the form when ready. -->
+      <!-- Cloudflare Turnstile: bot-check widget. With widget mode set to
+           "Invisible" in the Cloudflare dashboard, this renders nothing
+           to the user; api.js still injects a hidden cf-turnstile-response
+           into the form when the silent challenge resolves. -->
       <div
         class="cf-turnstile intro__subscribe-turnstile"
         data-sitekey="0x4AAAAAADD6s053Jp2LmuHv"
-        data-size="flexible"
-        data-theme="light"
       ></div>
     </form>
   </section>
