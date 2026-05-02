@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh auth *)",
+      "Bash(gh api *)",
+      "Bash(curl *)",
+      "Bash(nslookup alfredbirkelund.com)",
+      "Bash(nslookup www.alfredbirkelund.com)",
+      "Bash(gh run *)",
+      "Bash(nslookup *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(npm run *)"
+    ]
+  }
+}
